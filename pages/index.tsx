@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import styles from "../styles/Home.module.css";
 
+/* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
   handleCateChange: (value: string) => void;
 };
@@ -13,8 +14,11 @@ export type HandleCateChange = {
 export type Category = {
   category: string;
 };
+/* ----------------- TYPE DECLARATION ----------------- */
+
+/* ================== MAIN COMPONENT ================== */
 export default function Home() {
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState("");
 
   function handleCateChange(category: string) {
     setCategory(category);

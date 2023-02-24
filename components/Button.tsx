@@ -3,6 +3,7 @@ import { HandleCateChange } from "@/pages";
 
 import styles from "../styles/Home.module.css";
 
+/* ================== MAIN COMPONENT ================== */
 export default function Button(props: HandleCateChange) {
   const category: string[] = [
     // @ts-ignore
@@ -14,8 +15,6 @@ export default function Button(props: HandleCateChange) {
       {item}
     </button>
   ));
-
-  console.log("props", props);
 
   return (
     <>

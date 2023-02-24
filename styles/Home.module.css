@@ -2,3 +2,14 @@
     background-color: #2b3e46;
     color: antiquewhite;
 }
+
+.itemDiv {
+    display: flex;
+    padding: 1em;
+}
+
+.itemDivOdd {
+    display: flex;
+    padding: 1em;
+    backdrop-filter: brightness(80%);
+}
