@@ -1,9 +1,10 @@
 import Head from "next/head";
-import {} from "@next/font/google";
 
 import ProductList from "@/components/ProductList";
 import Button from "@/components/Button";
 import { useState } from "react";
+
+import styles from "../styles/Home.module.css";
 
 export type HandleCateChange = {
   handleCateChange: (value: string) => void;
@@ -13,7 +14,7 @@ export type Category = {
   category: string;
 };
 export default function Home() {
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("all");
 
   function handleCateChange(category: string) {
     setCategory(category);
@@ -27,7 +28,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
+
+      <main className={styles.appStyle}>
+        <h1>{category}</h1>
         <Button handleCateChange={handleCateChange} />
         <ProductList category={category} />
       </main>
