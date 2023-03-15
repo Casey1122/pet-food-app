@@ -19,6 +19,7 @@ export type Category = {
 /* ================== MAIN COMPONENT ================== */
 export default function Home() {
   const [category, setCategory] = useState("");
+  const [appPage, setAppPage] = useState("New Order");
 
   function handleCateChange(category: string) {
     setCategory(category);
@@ -33,10 +34,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.appStyle}>
-        <h1>{category}</h1>
-        <Button handleCateChange={handleCateChange} />
-        <ProductList category={category} />
+      <main className={styles.mainContainer}>
+        <div className={styles.container}>
+          <Button handleCateChange={handleCateChange} />
+          <ProductList category={category} />
+        </div>
       </main>
     </>
   );

@@ -188,4 +188,14 @@ export const productData: Product[] = [
     price: 88,
     gram: 50,
   },
+  {
+    id: 20,
+    category: "Others",
+    type: "fish",
+    part: "bones",
+    name_en: "Shark Cartilage Powder",
+    name_tc: "鯊魚軟骨粉",
+    price: 108,
+    gram: 50,
+  },
 ];
