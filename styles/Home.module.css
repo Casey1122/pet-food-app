@@ -1,15 +1,3 @@
-
-.itemDiv {
-    display: flex;
-    padding: 1em;
-}
-
-.itemDivOdd {
-    display: flex;
-    padding: 1em;
-    backdrop-filter: brightness(80%);
-}
-
 .mainContainer {
     background: linear-gradient(319deg, rgba(255, 192, 218, 1) 0%, rgba(209, 218, 255, 1) 100%);
     width: 100vw;
@@ -27,50 +15,159 @@
     height: 90%;
     border-radius: 8px;
     box-shadow: 8px 8px 20px rgba(31, 33, 54, 0.25);
-}
-
-.productList {
     display: flex;
-    list-style: none;
-    padding: 1em;
-    font-size: 1.2rem;
+}
+
+.orderContainer {
+    padding: 2em;
+}
+
+/* ================== APP INTERFACE FILTER  ================== */
+
+.interfaceButton {
     font-weight: bold;
-}
-
-.productList > li {
+    /*padding: 0.5em 0;*/
+    margin: 2em 0 1em;
+    max-width: 400px;
     background-color: white;
-    padding: 0.5em 0;
-    cursor: pointer;
-    display: inline-block;
+    border-radius: 40px;
+    display: flex;
+    justify-content: space-evenly;
 }
 
-.productList > li:first-child {
-    border-radius: 40px 0 0 40px;
-}
-
-.productList > li:last-child {
-    border-radius: 0 40px 40px 0;
-}
-
-.productList input[type="radio"] {
+.interfaceButton input[type="radio"] {
     opacity: 0;
     position: fixed;
     width: 0;
 }
 
-.productList input[type="radio"]:checked + label {
-    background-color: #41098a;
-    color: white;
-}
-
-
-.productList label {
-    padding: 0.5em 1em;
+.interfaceButton label {
+    padding: 0.5em 3em;
     cursor: pointer;
     border-radius: 40px;
+    margin-right: 0.5em;
+    background-color: white;
 }
 
-.productList label:hover {
+.interfaceButton input[type="radio"]:checked + label {
+    background-color: #41098a;
+    color: white;
+    box-shadow: 2px 2px 4px #052934;
+}
+
+.interfaceButton label:hover {
     background-color: #b89ae6;
 }
 
+/* ================== PRODUCT LIST FILTER  ================== */
+
+.filterButtonList {
+    display: flex;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 0.5em 0;
+    font-weight: bold;
+    background-color: white;
+    max-width: 400px;
+    border-radius: 40px;
+}
+
+.filterButtonList > li:first-child {
+    border-radius: 40px 0 0 40px;
+}
+
+.filterButtonList > li:last-child {
+    border-radius: 0 40px 40px 0;
+}
+
+.filterButtonList input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+
+.filterButtonList input[type="radio"]:checked + label {
+    background-color: #41098a;
+    box-shadow: 2px 2px 4px #052934;
+    color: white;
+}
+
+.filterButtonList label {
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border-radius: 40px;
+    background-color: white;
+    margin-right: 0.5em;
+}
+
+.filterButtonList label:hover {
+    background-color: #b89ae6;
+}
+
+/* ================== APP INTERFACE FILTER  ================== */
+
+.listContainer {
+    background-color: #EBF2F8;
+    width: 35%;
+    padding: 2em;
+    border-radius: 8px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.item > button {
+    border: none;
+    border-radius: 40px;
+    padding: 1em 1em;
+    background-color: #B7F0A3;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.item > button:hover {
+    filter: brightness(90%);
+}
+
+.item > button:active {
+    filter: brightness(80%);
+}
+
+.itemDiv {
+    padding: 1em;
+    border: 4px solid white;
+    border-radius: 4px;
+
+}
+
+.itemDivOdd {
+    padding: 1em;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.itemName {
+    width: 180px;
+    /*background-color: red;*/
+}
+
+.itemName > p:last-of-type {
+    color: #606060;
+    font-size: 0.8rem;
+}
+
+.productList {
+    overflow: scroll;
+    height: 550px;
+}
+
+.listContainer > h4 {
+    color: #41098a;
+    font-size: 1.2rem;
+    margin-top: 2em;
+    margin-bottom: 0.4em
+}

@@ -1,14 +1,21 @@
 import Head from "next/head";
 
 import ProductList from "@/components/ProductList";
-import Button from "@/components/Button";
+import CateFilterButton from "@/components/CateFilterButton";
 import { useState } from "react";
 
 import styles from "../styles/Home.module.css";
+import InterfaceFilterButton from "@/components/InterfaceFilterButton";
+import List from "@/components/List";
+import Order from "@/components/Order";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
   handleCateChange: (value: string) => void;
+};
+
+export type handleInterfaceChange = {
+  handleInterfaceChange: (value: string) => void;
 };
 
 export type Category = {
@@ -19,10 +26,14 @@ export type Category = {
 /* ================== MAIN COMPONENT ================== */
 export default function Home() {
   const [category, setCategory] = useState("");
-  const [appPage, setAppPage] = useState("New Order");
+  const [appInterface, setAppInterface] = useState("New Order");
 
   function handleCateChange(category: string) {
     setCategory(category);
+  }
+
+  function handleInterfaceChange(appInterface: string) {
+    setAppInterface(appInterface);
   }
 
   return (
@@ -36,10 +47,42 @@ export default function Home() {
 
       <main className={styles.mainContainer}>
         <div className={styles.container}>
-          <Button handleCateChange={handleCateChange} />
-          <ProductList category={category} />
+          <List
+            handleInterfaceChange={handleInterfaceChange}
+            handleCateChange={handleCateChange}
+            category={category}
+          />
+          <Order />
         </div>
       </main>
     </>
   );
+}
+
+{
+  /*<div className={styles.container}>*/
+}
+{
+  /*  <InterfaceFilterButton*/
+}
+{
+  /*    handleInterfaceChange={handleInterfaceChange}*/
+}
+{
+  /*  />*/
+}
+{
+  /*  <h4>Category</h4>*/
+}
+{
+  /*  <CateFilterButton handleCateChange={handleCateChange} />*/
+}
+{
+  /*  <h4>Products</h4>*/
+}
+{
+  /*  <ProductList category={category} />*/
+}
+{
+  /*</div>*/
 }

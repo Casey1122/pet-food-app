@@ -5,17 +5,13 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 
 /* ================== MAIN COMPONENT ================== */
-export default function Button(props: HandleCateChange) {
-  const [checkedIcon, setCheckedIcon] = useState("");
-
+export default function CateFilterButton(props: HandleCateChange) {
   const category: string[] = [
     // @ts-ignore
     ...new Set(productData.map((item) => item.category)),
   ];
 
-  console.log(props);
-
-  const listElements = category.map((item, index) => (
+  const filterButtonList = category.map((item, index) => (
     <div key={index}>
       <input type="radio" id={item} name="filter" value={item} />
       <label htmlFor={item} onClick={() => props.handleCateChange(item)}>
@@ -24,9 +20,5 @@ export default function Button(props: HandleCateChange) {
     </div>
   ));
 
-  return (
-    <>
-      <ul className={styles.productList}>{listElements}</ul>
-    </>
-  );
+  return <div className={styles.filterButtonList}>{filterButtonList}</div>;
 }

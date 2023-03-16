@@ -13,16 +13,19 @@ export default function ProductList(props: Category) {
     return (
       <div
         key={index}
-        className={index % 2 === 0 ? styles.itemDivOdd : styles.itemDiv}
+        className={`${styles.item} ${
+          index % 2 === 0 ? styles.itemDivOdd : styles.itemDiv
+        }`}
       >
-        <p>
-          {item.name_tc}
-          {item.name_en}
-        </p>
+        <div className={styles.itemName}>
+          <p>{item.name_tc}</p>
+          <p>{item.name_en}</p>
+        </div>
         <p>${item.price}</p>
+        <button>+ Add to Order</button>
       </div>
     );
   });
 
-  return <>{listElements}</>;
+  return <div className={styles.productList}>{listElements}</div>;
 }
