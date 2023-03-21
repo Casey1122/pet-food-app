@@ -26,9 +26,8 @@
 
 .interfaceButton {
     font-weight: bold;
-    /*padding: 0.5em 0;*/
     margin: 2em 0 1em;
-    max-width: 400px;
+    max-width: 500px;
     background-color: white;
     border-radius: 40px;
     display: flex;
@@ -42,11 +41,12 @@
 }
 
 .interfaceButton label {
-    padding: 0.5em 3em;
+    padding: 0.5em 3.5em;
     cursor: pointer;
     border-radius: 40px;
     margin-right: 0.5em;
     background-color: white;
+    display: flex;
 }
 
 .interfaceButton input[type="radio"]:checked + label {
@@ -59,6 +59,11 @@
     background-color: #b89ae6;
 }
 
+.filterIcon {
+    font-size: 1.2rem;
+    margin-right: 0.5em;
+}
+
 /* ================== PRODUCT LIST FILTER  ================== */
 
 .filterButtonList {
@@ -68,7 +73,7 @@
     padding: 0.5em 0;
     font-weight: bold;
     background-color: white;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 40px;
 }
 
@@ -93,7 +98,7 @@
 }
 
 .filterButtonList label {
-    padding: 0.5em 1em;
+    padding: 0.5em 2em;
     cursor: pointer;
     border-radius: 40px;
     background-color: white;
@@ -104,13 +109,23 @@
     background-color: #b89ae6;
 }
 
+.buttonFlex {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 1em;
+}
+
 /* ================== APP INTERFACE FILTER  ================== */
 
 .listContainer {
     background-color: #EBF2F8;
     width: 35%;
     padding: 2em;
-    border-radius: 8px;
+    border-radius: 8px 0 0 8px;
+    overflow: scroll;
 }
 
 .item {
@@ -123,7 +138,7 @@
 .item > button {
     border: none;
     border-radius: 40px;
-    padding: 1em 1em;
+    padding: 0.6em 2em;
     background-color: #B7F0A3;
     font-weight: bold;
     cursor: pointer;
@@ -152,7 +167,6 @@
 
 .itemName {
     width: 180px;
-    /*background-color: red;*/
 }
 
 .itemName > p:last-of-type {
@@ -170,4 +184,74 @@
     font-size: 1.2rem;
     margin-top: 2em;
     margin-bottom: 0.4em
+}
+
+/* ================== ORDER SECTION  ================== */
+
+.orderSection {
+    padding: 4.5em;
+    width: 47%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.orderSection h4 {
+    font-size: 1.2rem;
+}
+
+.titles {
+    background-color: red;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+}
+
+.itemList {
+    background-color: antiquewhite;
+    height: 70%;
+    max-height: 600px;
+}
+
+.itemCost {
+    display: flex;
+    justify-content: flex-end;
+    font-weight: bold;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+}
+
+.buttonGroup button {
+    border: none;
+    padding: 0.5em 3em;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.buttonGroup button:first-of-type {
+    margin-right: 3em;
+    background-color: #eaeaea;
+    color: orangered;
+}
+
+.buttonGroup button:first-of-type:hover {
+    background-color: #d0d0d0;
+}
+
+.buttonGroup button:last-of-type {
+    background-color: #41098a;
+    color: white
+}
+
+.buttonGroup button:last-of-type:hover {
+    background-color: #360771;
+}
+
+.buttonGroup button:active {
+    filter: brightness(80%);
 }

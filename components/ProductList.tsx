@@ -1,5 +1,6 @@
 import { productData } from "@/pages/api/productData";
 import { Category } from "@/pages";
+import { AiOutlinePlus } from "react-icons/ai";
 
 import styles from "../styles/Home.module.css";
 
@@ -22,7 +23,9 @@ export default function ProductList(props: Category) {
           <p>{item.name_en}</p>
         </div>
         <p>${item.price}</p>
-        <button>+ Add to Order</button>
+        <button className={styles.buttonFlex}>
+          <AiOutlinePlus className={styles.icon} /> Add to order
+        </button>
       </div>
     );
   });
