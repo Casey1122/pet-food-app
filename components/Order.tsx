@@ -1,6 +1,22 @@
 import styles from "@/styles/Home.module.css";
+import { useCurrentOrderStore } from "@/stores/OrderStore";
 
 function Order() {
+  const currentOrder = useCurrentOrderStore((state) => state.currentOrder);
+  const clearCurrentOrder = useCurrentOrderStore(
+    (state) => state.clearCurrentOrder
+  );
+
+  const currentOrderElement = currentOrder.map((item, index) => {
+    return (
+      <div key={index}>
+        <p>{item.name_tc}</p>
+        <p>{item.name_en}</p>
+        <p>{item.price}</p>
+      </div>
+    );
+  });
+
   return (
     <div className={styles.orderSection}>
       <h4>Order</h4>
@@ -10,7 +26,7 @@ function Order() {
         <p>Amount</p>
       </div>
       <div className={styles.itemList}>
-        <p>No item yet</p>
+        {currentOrder ? currentOrderElement : <p>No item yet</p>}
       </div>
       <div className={styles.itemCost}>
         <p>TOTAL:</p>
@@ -18,7 +34,7 @@ function Order() {
       </div>
       <hr />
       <div className={styles.buttonGroup}>
-        <button>Clear</button>
+        <button onClick={clearCurrentOrder}>Clear</button>
         <button>Create Order</button>
       </div>
     </div>

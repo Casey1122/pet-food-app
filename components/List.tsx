@@ -10,7 +10,7 @@ interface ListProps {
 }
 
 function List(props: ListProps) {
-  console.log(props);
+  // console.log(props);
   return (
     <div className={styles.listContainer}>
       <InterfaceFilterButton

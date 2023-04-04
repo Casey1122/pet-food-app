@@ -1,13 +1,11 @@
 import Head from "next/head";
 
-import ProductList from "@/components/ProductList";
-import CateFilterButton from "@/components/CateFilterButton";
 import { useState } from "react";
 
 import styles from "../styles/Home.module.css";
-import InterfaceFilterButton from "@/components/InterfaceFilterButton";
 import List from "@/components/List";
 import Order from "@/components/Order";
+import { Product } from "@/pages/api/productData";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
@@ -21,10 +19,15 @@ export type handleInterfaceChange = {
 export type Category = {
   category: string;
 };
+
+interface Props {
+  current: Product;
+}
+
 /* ----------------- TYPE DECLARATION ----------------- */
 
 /* ================== MAIN COMPONENT ================== */
-export default function Home() {
+export default function Home(props: Props) {
   const [category, setCategory] = useState("");
   const [appInterface, setAppInterface] = useState("New Order");
 
@@ -57,32 +60,4 @@ export default function Home() {
       </main>
     </>
   );
-}
-
-{
-  /*<div className={styles.container}>*/
-}
-{
-  /*  <InterfaceFilterButton*/
-}
-{
-  /*    handleInterfaceChange={handleInterfaceChange}*/
-}
-{
-  /*  />*/
-}
-{
-  /*  <h4>Category</h4>*/
-}
-{
-  /*  <CateFilterButton handleCateChange={handleCateChange} />*/
-}
-{
-  /*  <h4>Products</h4>*/
-}
-{
-  /*  <ProductList category={category} />*/
-}
-{
-  /*</div>*/
 }
