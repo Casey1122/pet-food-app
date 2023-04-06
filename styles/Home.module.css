@@ -201,17 +201,30 @@
 }
 
 .titles {
-    background-color: red;
+    /*background-color: red;*/
     width: 100%;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid gray;
+    font-weight: bold;
 }
 
 .itemList {
-    background-color: antiquewhite;
+    /*background-color: antiquewhite;*/
     height: 70%;
     max-height: 600px;
+}
+
+.itemTitle {
+    width: 250px;
+}
+
+.orderItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    border: 1px solid #b89ae6;
+    margin-bottom: 0.5em;
 }
 
 .itemCost {
