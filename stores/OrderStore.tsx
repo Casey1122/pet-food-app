@@ -12,11 +12,18 @@ export interface CurrentOrderStore {
     currentOrder: Product[],
     uniqueCurrentOrder: UniqueCurrentOrder[]
   ) => void;
+  incrementOrder: () => Product[];
+  decrementOrder: () => Product[];
 }
 
 export interface UniqueCurrentOrder {
   product: Product;
   quantity: number;
+}
+
+interface Count {
+  id?: number;
+  quantity?: number;
 }
 
 export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
@@ -29,18 +36,21 @@ export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
   uniqueCurrentOrder: [],
   setUniqueCurrentOrder: (currentOrder, uniqueCurrentOrder) =>
     set({
+      // @ts-ignore
       uniqueCurrentOrder: createUniqueCurrentOrder(
         currentOrder,
         uniqueCurrentOrder
       ),
     }),
+  incrementOrder: () => set({ currentOrder: incrementCurrentOrder() }),
+  decrementOrder: () => set({ currentOrder: decrementCurrentOrder() }),
 }));
 
 function createUniqueCurrentOrder(
   currentOrder: Product[],
   uniqueCurrentOrder: UniqueCurrentOrder[]
-) {
-  const count = {};
+): Product[] {
+  const count: Count = {};
   currentOrder.forEach((item) => {
     // @ts-ignore
     count[item.id] = (count[item.id] || 0) + 1;
@@ -49,8 +59,15 @@ function createUniqueCurrentOrder(
   const uniqueItemList: UniqueCurrentOrder = [...new Set(currentOrder)].map(
     (product) => ({
       product,
+      // @ts-ignore
       quantity: count[product.id],
     })
   );
-  return uniqueItemList;
+  return uniqueItemList as unknown as Product[];
 }
+
+function incrementCurrentOrder() {
+  const result = [];
+}
+
+function decrementCurrentOrder() {}

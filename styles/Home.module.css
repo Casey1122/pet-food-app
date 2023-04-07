@@ -213,6 +213,7 @@
     /*background-color: antiquewhite;*/
     height: 70%;
     max-height: 600px;
+    overflow: scroll;
 }
 
 .itemTitle {
@@ -222,9 +223,23 @@
 .orderItem {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 1em;
     border: 1px solid #b89ae6;
     margin-bottom: 0.5em;
+}
+
+.quantityBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantityButton {
+    background-color: orange;
+    padding: 0.2em;
+    border-radius: 10px;
+    margin: 0 0.2em
 }
 
 .itemCost {

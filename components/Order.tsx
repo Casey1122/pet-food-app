@@ -1,6 +1,8 @@
 import styles from "@/styles/Home.module.css";
 import { useCurrentOrderStore } from "@/stores/OrderStore";
 import { useEffect, useState } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineMinus } from "react-icons/ai";
 
 function Order() {
   /* ==================== VALUE FROM STORE ==================== */
@@ -17,19 +19,6 @@ function Order() {
     (state) => state.setUniqueCurrentOrder
   );
 
-  const currentOrderElement = uniqueCurrentOrder.map((item, index) => {
-    return (
-      <div key={index} className={styles.orderItem}>
-        <div className={styles.itemTitle}>
-          <p>{item.product.name_tc}</p>
-          <p>{item.product.name_en}</p>
-        </div>
-        <p>{item.quantity}</p>
-        <p>${item.product.price}</p>
-      </div>
-    );
-  });
-
   useEffect(() => {
     calculateTotal();
     setUniqueCurrentOrder(currentOrder, uniqueCurrentOrder);
@@ -38,33 +27,30 @@ function Order() {
   // console.log("currentOrder", currentOrder);
   console.log("uniqueCurrentOrder", uniqueCurrentOrder);
 
+  const currentOrderElement = uniqueCurrentOrder.map((item, index) => {
+    return (
+      <div key={index} className={styles.orderItem}>
+        <div className={styles.itemTitle}>
+          <p>{item.product.name_tc}</p>
+          <p>{item.product.name_en}</p>
+        </div>
+        <p className={styles.quantityBox}>
+          <AiOutlineMinus className={styles.quantityButton} />
+          {item.quantity}
+          {item.quantity > 1 ? " pcs" : " pc"}
+          <AiOutlinePlus className={styles.quantityButton} />
+        </p>
+        <p>${item.product.price}</p>
+      </div>
+    );
+  });
+
   function calculateTotal() {
     const result = currentOrder
       .map((item) => item.price)
       .reduce((accumulator, current) => accumulator + current, 0);
     setTotalAmount(result);
   }
-
-  // function itemCount(id: number) {
-  //   // @ts-ignore
-  //   const uniqueItems = [...new Set(currentOrder)];
-  //   const count = uniqueItems.map((item) => [
-  //     item,
-  //     currentOrder.filter((element) => element.id === id).length,
-  //   ]);
-  //   console.log("count", count);
-  //   return count;
-  // }
-
-  // function itemCount2() {
-  //   // @ts-ignore
-  //   const uniqueItemList = [...new Set(currentOrder)];
-  //   const uniqueItemListWithQuantity = uniqueItemList.map((item) => ({
-  //     item,
-  //     quantity: 1,
-  //   }));
-  //   setUniqueItem(uniqueItemListWithQuantity);
-  // }
 
   return (
     <div className={styles.orderSection}>
@@ -78,8 +64,11 @@ function Order() {
         {currentOrder.length ? currentOrderElement : <p>No item yet</p>}
       </div>
       <div className={styles.itemCost}>
-        <p>TOTAL:</p>
-        <p>${totalAmount}</p>
+        <p>
+          TOTAL ITEM: {currentOrder.length}{" "}
+          {currentOrder.length > 1 ? "pcs" : "pc"}
+        </p>
+        <p>TOTAL: ${totalAmount}</p>
       </div>
       <hr />
       <div className={styles.buttonGroup}>
