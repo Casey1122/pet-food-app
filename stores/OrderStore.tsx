@@ -14,6 +14,7 @@ export interface CurrentOrderStore {
   ) => void;
   incrementItem: (id: number, currentOrder: Product[]) => void;
   decrementItem: (id: number, currentOrder: Product[]) => void;
+  removeItem: (id: number, currentOrder: Product[]) => void;
 }
 
 export interface UniqueCurrentOrder {
@@ -34,26 +35,23 @@ export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
   totalAmount: 0,
   setTotalAmount: (amount) => set({ totalAmount: amount }),
   uniqueCurrentOrder: [],
-  setUniqueCurrentOrder: (currentOrder, uniqueCurrentOrder) =>
+  setUniqueCurrentOrder: (currentOrder) =>
     set({
       // @ts-ignore
-      uniqueCurrentOrder: createUniqueCurrentOrder(
-        currentOrder,
-        uniqueCurrentOrder
-      ),
+      uniqueCurrentOrder: createUniqueCurrentOrder(currentOrder),
     }),
-  incrementItem: (id: number, currentOrder: Product[]) =>
+  incrementItem: (id: number, currentOrder) =>
     set({
       currentOrder: [...currentOrder, incrementCurrentOrder(id, currentOrder)],
     }),
-  decrementItem: (id: number, currentOrder: Product[]) =>
+  decrementItem: (id: number, currentOrder) =>
     set({ currentOrder: decrementCurrentOrder(id, currentOrder) }),
+  removeItem: (id: number, currentOrder) => {
+    set({ currentOrder: removeItem(id, currentOrder) });
+  },
 }));
 
-function createUniqueCurrentOrder(
-  currentOrder: Product[],
-  uniqueCurrentOrder: UniqueCurrentOrder[]
-): Product[] {
+function createUniqueCurrentOrder(currentOrder: Product[]): Product[] {
   const count: Count = {};
   currentOrder.forEach((item) => {
     // @ts-ignore
@@ -80,4 +78,8 @@ function decrementCurrentOrder(id: number, currentOrder: Product[]) {
   const halfBeforeUnwantedItem = currentOrder.slice(0, indexOfTargetItem);
   const halfAfterUnwantedItem = currentOrder.slice(indexOfTargetItem + 1);
   return halfBeforeUnwantedItem.concat(halfAfterUnwantedItem);
+}
+
+function removeItem(id: number, currentOrder: Product[]) {
+  return currentOrder.filter((item) => item.id !== id);
 }

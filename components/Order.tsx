@@ -21,6 +21,7 @@ function Order() {
   );
   const incrementItem = useCurrentOrderStore((state) => state.incrementItem);
   const decrementItem = useCurrentOrderStore((state) => state.decrementItem);
+  const removeItem = useCurrentOrderStore((state) => state.removeItem);
 
   useEffect(() => {
     calculateTotal();
@@ -39,19 +40,24 @@ function Order() {
             ( ID: {item.product.id} ) - {item.product.name_en}
           </p>
         </div>
-        <p className={styles.quantityBox}>
+        <div className={styles.quantityBox}>
           <AiOutlineMinus
             className={styles.quantityButton}
             onClick={() => decrementItem(item.product.id, currentOrder)}
           />
-          {item.quantity}
-          {item.quantity > 1 ? " pcs" : " pc"}
+          <p>
+            {item.quantity}
+            {item.quantity > 1 ? " pcs" : " pc"}
+          </p>
           <AiOutlinePlus
             className={styles.quantityButton}
             onClick={() => incrementItem(item.product.id, currentOrder)}
           />
-          <TfiTrash className={styles.removeButton} />
-        </p>
+          <TfiTrash
+            className={styles.removeButton}
+            onClick={() => removeItem(item.product.id, currentOrder)}
+          />
+        </div>
         <p>${item.product.price}</p>
       </div>
     );
@@ -67,11 +73,6 @@ function Order() {
   return (
     <div className={styles.orderSection}>
       <h4>Order</h4>
-      <div className={styles.titles}>
-        <p>Item</p>
-        <p>Quantity</p>
-        <p>Amount</p>
-      </div>
       <div className={styles.itemList}>
         {currentOrder.length ? currentOrderElement : <p>No item yet</p>}
       </div>

@@ -217,7 +217,8 @@
 }
 
 .itemTitle {
-    width: 250px;
+    width: 270px;
+    /*background-color: red;*/
 }
 
 .orderItem {
@@ -235,6 +236,12 @@
     justify-content: flex-end;
     align-items: center;
     width: 200px;
+}
+
+.quantityBox p {
+    /*background-color: red;*/
+    width: 60px;
+    text-align: center;
 }
 
 .quantityButton {
