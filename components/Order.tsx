@@ -3,6 +3,7 @@ import { useCurrentOrderStore } from "@/stores/OrderStore";
 import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
+import { TfiTrash } from "react-icons/tfi";
 
 function Order() {
   /* ==================== VALUE FROM STORE ==================== */
@@ -18,6 +19,8 @@ function Order() {
   const setUniqueCurrentOrder = useCurrentOrderStore(
     (state) => state.setUniqueCurrentOrder
   );
+  const incrementItem = useCurrentOrderStore((state) => state.incrementItem);
+  const decrementItem = useCurrentOrderStore((state) => state.decrementItem);
 
   useEffect(() => {
     calculateTotal();
@@ -25,20 +28,29 @@ function Order() {
   }, [currentOrder]);
 
   // console.log("currentOrder", currentOrder);
-  console.log("uniqueCurrentOrder", uniqueCurrentOrder);
+  // console.log("uniqueCurrentOrder", uniqueCurrentOrder);
 
   const currentOrderElement = uniqueCurrentOrder.map((item, index) => {
     return (
       <div key={index} className={styles.orderItem}>
         <div className={styles.itemTitle}>
           <p>{item.product.name_tc}</p>
-          <p>{item.product.name_en}</p>
+          <p>
+            ( ID: {item.product.id} ) - {item.product.name_en}
+          </p>
         </div>
         <p className={styles.quantityBox}>
-          <AiOutlineMinus className={styles.quantityButton} />
+          <AiOutlineMinus
+            className={styles.quantityButton}
+            onClick={() => decrementItem(item.product.id, currentOrder)}
+          />
           {item.quantity}
           {item.quantity > 1 ? " pcs" : " pc"}
-          <AiOutlinePlus className={styles.quantityButton} />
+          <AiOutlinePlus
+            className={styles.quantityButton}
+            onClick={() => incrementItem(item.product.id, currentOrder)}
+          />
+          <TfiTrash className={styles.removeButton} />
         </p>
         <p>${item.product.price}</p>
       </div>
@@ -68,7 +80,7 @@ function Order() {
           TOTAL ITEM: {currentOrder.length}{" "}
           {currentOrder.length > 1 ? "pcs" : "pc"}
         </p>
-        <p>TOTAL: ${totalAmount}</p>
+        <p>TOTAL: $ {totalAmount.toLocaleString("en-US")}</p>
       </div>
       <hr />
       <div className={styles.buttonGroup}>

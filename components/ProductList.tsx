@@ -27,7 +27,9 @@ export default function ProductList(props: Category) {
       >
         <div className={styles.itemName}>
           <p>{item.name_tc}</p>
-          <p>{item.name_en}</p>
+          <p>
+            ( ID: {item.id} ) - {item.name_en}
+          </p>
         </div>
         <p>${item.price}</p>
         <button

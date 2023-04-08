@@ -12,8 +12,8 @@ export interface CurrentOrderStore {
     currentOrder: Product[],
     uniqueCurrentOrder: UniqueCurrentOrder[]
   ) => void;
-  incrementOrder: () => Product[];
-  decrementOrder: () => Product[];
+  incrementItem: (id: number, currentOrder: Product[]) => void;
+  decrementItem: (id: number, currentOrder: Product[]) => void;
 }
 
 export interface UniqueCurrentOrder {
@@ -42,8 +42,12 @@ export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
         uniqueCurrentOrder
       ),
     }),
-  incrementOrder: () => set({ currentOrder: incrementCurrentOrder() }),
-  decrementOrder: () => set({ currentOrder: decrementCurrentOrder() }),
+  incrementItem: (id: number, currentOrder: Product[]) =>
+    set({
+      currentOrder: [...currentOrder, incrementCurrentOrder(id, currentOrder)],
+    }),
+  decrementItem: (id: number, currentOrder: Product[]) =>
+    set({ currentOrder: decrementCurrentOrder(id, currentOrder) }),
 }));
 
 function createUniqueCurrentOrder(
@@ -56,18 +60,24 @@ function createUniqueCurrentOrder(
     count[item.id] = (count[item.id] || 0) + 1;
   });
   // @ts-ignore
-  const uniqueItemList: UniqueCurrentOrder = [...new Set(currentOrder)].map(
+  const uniqueItemList: UniqueCurrentOrder[] = [...new Set(currentOrder)].map(
     (product) => ({
       product,
       // @ts-ignore
       quantity: count[product.id],
     })
   );
+  uniqueItemList.sort((a, b) => a.product.id - b.product.id);
   return uniqueItemList as unknown as Product[];
 }
 
-function incrementCurrentOrder() {
-  const result = [];
+function incrementCurrentOrder(id: number, currentOrder: Product[]) {
+  return currentOrder.filter((item) => item.id === id)[0];
 }
 
-function decrementCurrentOrder() {}
+function decrementCurrentOrder(id: number, currentOrder: Product[]) {
+  const indexOfTargetItem = currentOrder.findIndex((item) => item.id === id);
+  const halfBeforeUnwantedItem = currentOrder.slice(0, indexOfTargetItem);
+  const halfAfterUnwantedItem = currentOrder.slice(indexOfTargetItem + 1);
+  return halfBeforeUnwantedItem.concat(halfAfterUnwantedItem);
+}

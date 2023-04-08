@@ -226,27 +226,54 @@
     align-items: center;
     padding: 1em;
     border: 1px solid #b89ae6;
+    border-radius: 4px;
     margin-bottom: 0.5em;
 }
 
 .quantityBox {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+    width: 200px;
 }
 
 .quantityButton {
-    background-color: orange;
-    padding: 0.2em;
-    border-radius: 10px;
-    margin: 0 0.2em
+    background-color: #dbc6ff;
+    color: white;
+    padding: 0.3em;
+    border-radius: 20px;
+    margin: 0 0.2em;
+    cursor: pointer;
+}
+
+.quantityButton:hover {
+    filter: brightness(90%);
+}
+
+.quantityButton:active {
+    filter: brightness(80%);
+}
+
+.removeButton {
+    background-color: #db538e;
+    color: white;
+    padding: 0.3em;
+    border-radius: 20px;
+    margin: 0 0.2em;
+    cursor: pointer;
 }
 
 .itemCost {
     display: flex;
     justify-content: flex-end;
     font-weight: bold;
+    font-size: 1.2rem;
 }
+
+.itemCost p:first-of-type {
+    margin-right: 2em;
+}
+
 
 .buttonGroup {
     display: flex;
