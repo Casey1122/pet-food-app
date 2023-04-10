@@ -2,7 +2,6 @@ import { productData } from "@/pages/api/productData";
 import { HandleCateChange } from "@/pages";
 
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
 
 /* ================== MAIN COMPONENT ================== */
 export default function CateFilterButton(props: HandleCateChange) {

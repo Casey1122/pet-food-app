@@ -231,6 +231,12 @@
     margin-bottom: 0.5em;
 }
 
+.orderItem > p:nth-last-of-type(1) {
+    /*background-color: red;*/
+    width: 50px;
+    text-align: right;
+}
+
 .quantityBox {
     display: flex;
     justify-content: flex-end;

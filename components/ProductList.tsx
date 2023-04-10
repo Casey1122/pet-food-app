@@ -1,21 +1,22 @@
 import { productData } from "@/pages/api/productData";
-import { Category } from "@/pages";
 import { AiOutlinePlus } from "react-icons/ai";
 
 import styles from "../styles/Home.module.css";
 import { useCurrentOrderStore } from "@/stores/OrderStore";
 
+interface Props {
+  category: string;
+}
+
 /* ================== MAIN COMPONENT ================== */
-export default function ProductList(props: Category) {
-  const { category } = props;
-  const currentOrder = useCurrentOrderStore((state) => state.currentOrder);
+export default function ProductList(props: Props) {
   const addToCurrentOrder = useCurrentOrderStore(
     (state) => state.addToCurrentOrder
   );
 
-  console.log("currentOrder", currentOrder);
-
-  const filteredList = productData.filter((item) => item.category === category);
+  const filteredList = productData.filter(
+    (item) => item.category === props.category
+  );
 
   const listElements = filteredList.map((item, index) => {
     return (

@@ -11,6 +11,7 @@ function InterfaceFilterButton(props: handleInterfaceChange) {
         id="New Order"
         name="interface-filter"
         value="New Order"
+        defaultChecked
       />
       <label
         htmlFor="New Order"

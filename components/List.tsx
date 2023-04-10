@@ -1,25 +1,33 @@
 import styles from "@/styles/Home.module.css";
 import InterfaceFilterButton from "@/components/InterfaceFilterButton";
-import CateFilterButton from "@/components/CateFilterButton";
-import ProductList from "@/components/ProductList";
+import { useState } from "react";
+import NewOrderInterface from "@/components/NewOrderInterface";
 
-interface ListProps {
+interface Props {
   handleInterfaceChange: (value: string) => void;
-  handleCateChange: (value: string) => void;
-  category: string;
+  appInterface: string;
 }
 
-function List(props: ListProps) {
-  // console.log(props);
+function List(props: Props) {
+  const [category, setCategory] = useState("");
+
+  function handleCateChange(category: string) {
+    setCategory(category);
+  }
+
   return (
     <div className={styles.listContainer}>
       <InterfaceFilterButton
         handleInterfaceChange={props.handleInterfaceChange}
       />
-      <h4>Category</h4>
-      <CateFilterButton handleCateChange={props.handleCateChange} />
-      <h4>Products</h4>
-      <ProductList category={props.category} />
+      {props.appInterface === "New Order" ? (
+        <NewOrderInterface
+          handleCateChange={handleCateChange}
+          category={category}
+        />
+      ) : (
+        "View Order Interface"
+      )}
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import Head from "next/head";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 import styles from "../styles/Home.module.css";
 import List from "@/components/List";
 import Order from "@/components/Order";
-import { Product } from "@/pages/api/productData";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
@@ -16,27 +15,14 @@ export type handleInterfaceChange = {
   handleInterfaceChange: (value: string) => void;
 };
 
-export type Category = {
-  category: string;
-};
-
-interface Props {
-  current: Product;
-}
-
 /* ----------------- TYPE DECLARATION ----------------- */
 
 /* ================== MAIN COMPONENT ================== */
-export default function Home(props: Props) {
-  const [category, setCategory] = useState("");
+export default function Home() {
   const [appInterface, setAppInterface] = useState("New Order");
 
-  function handleCateChange(category: string) {
-    setCategory(category);
-  }
-
-  function handleInterfaceChange(appInterface: string) {
-    setAppInterface(appInterface);
+  function handleInterfaceChange(interfaceValue: string) {
+    setAppInterface(interfaceValue);
   }
 
   return (
@@ -51,11 +37,10 @@ export default function Home(props: Props) {
       <main className={styles.mainContainer}>
         <div className={styles.container}>
           <List
+            appInterface={appInterface}
             handleInterfaceChange={handleInterfaceChange}
-            handleCateChange={handleCateChange}
-            category={category}
           />
-          <Order />
+          <Order appInterface={appInterface} />
         </div>
       </main>
     </>
