@@ -2,13 +2,14 @@ import styles from "@/styles/Home.module.css";
 import InterfaceFilterButton from "@/components/InterfaceFilterButton";
 import { useState } from "react";
 import NewOrderInterface from "@/components/NewOrderInterface";
+import OrderSummary from "@/components/OrderSummary";
 
 interface Props {
   handleInterfaceChange: (value: string) => void;
   appInterface: string;
 }
 
-function List(props: Props) {
+function ListSection(props: Props) {
   const [category, setCategory] = useState("");
 
   function handleCateChange(category: string) {
@@ -20,16 +21,16 @@ function List(props: Props) {
       <InterfaceFilterButton
         handleInterfaceChange={props.handleInterfaceChange}
       />
-      {props.appInterface === "New Order" ? (
+      {props.appInterface === "New OrderSection" ? (
         <NewOrderInterface
           handleCateChange={handleCateChange}
           category={category}
         />
       ) : (
-        "View Order Interface"
+        <OrderSummary />
       )}
     </div>
   );
 }
 
-export default List;
+export default ListSection;

@@ -1,7 +1,9 @@
 import { create } from "zustand";
-import { Product } from "@/pages/api/productData";
+import firestore from "firebase/firestore";
+import { immer } from "zustand/middleware/immer";
+import { set } from "@firebase/database";
 
-export interface CurrentOrderStore {
+export interface OrderStore {
   currentOrder: Product[];
   addToCurrentOrder: (item: Product) => void;
   clearCurrentOrder: () => void;
@@ -15,6 +17,18 @@ export interface CurrentOrderStore {
   incrementItem: (id: number, currentOrder: Product[]) => void;
   decrementItem: (id: number, currentOrder: Product[]) => void;
   removeItem: (id: number, currentOrder: Product[]) => void;
+  // orderSummary: OrderSummary[];
+}
+
+export interface Product {
+  id: number;
+  category: string;
+  type?: string;
+  part?: string;
+  name_en: string;
+  name_tc: string;
+  price: number;
+  gram: number;
 }
 
 export interface UniqueCurrentOrder {
@@ -22,11 +36,16 @@ export interface UniqueCurrentOrder {
   quantity: number;
 }
 
+export interface Order {
+  products: Product[];
+  created: firestore.Timestamp;
+}
+
 interface Count {
   [key: number]: number;
 }
 
-export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
+export const useOrderStore = create<OrderStore>((set) => ({
   currentOrder: [],
   addToCurrentOrder: (item: Product) =>
     set((state) => ({ ...state, currentOrder: [...state.currentOrder, item] })),
@@ -40,7 +59,10 @@ export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
     }),
   incrementItem: (id: number, currentOrder) =>
     set({
-      currentOrder: [...currentOrder, incrementCurrentOrder(id, currentOrder)],
+      currentOrder: [
+        ...currentOrder,
+        incrementCurrentOrder(id, currentOrder) as Product,
+      ],
     }),
   decrementItem: (id: number, currentOrder) =>
     set({ currentOrder: decrementCurrentOrder(id, currentOrder) }),
@@ -48,6 +70,20 @@ export const useCurrentOrderStore = create<CurrentOrderStore>((set) => ({
     set({ currentOrder: removeItem(id, currentOrder) });
   },
 }));
+
+/*
+export const useOrderStore = create<CurrentOrderStore>(
+  immer<State & Actions>((set) => ({
+    currentOrder: [],
+    addToCurrentOrder: (item: Product) =>
+      set((state) => {
+        state.currentOder.push(item);
+      }),
+    clearCurrent: () => set(state => state.)
+  }))
+);
+
+ */
 
 function createUniqueCurrentOrder(
   currentOrder: Product[]
@@ -69,7 +105,7 @@ function createUniqueCurrentOrder(
 }
 
 function incrementCurrentOrder(id: number, currentOrder: Product[]) {
-  return currentOrder.filter((item) => item.id === id)[0];
+  return currentOrder.find((item) => item.id === id);
 }
 
 function decrementCurrentOrder(id: number, currentOrder: Product[]) {

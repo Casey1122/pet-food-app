@@ -1,27 +1,30 @@
 import styles from "@/styles/Home.module.css";
-import { useCurrentOrderStore } from "@/stores/OrderStore";
-import { useEffect } from "react";
+import { Product, useOrderStore } from "@/stores/OrderStore";
+import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
 
+import { db } from "@/firebaseConfig";
+import { collection, addDoc, Timestamp } from "@firebase/firestore";
+
 function NewOrderDetails() {
   /* ==================== VALUE FROM STORE ==================== */
-  const currentOrder = useCurrentOrderStore((state) => state.currentOrder);
-  const clearCurrentOrder = useCurrentOrderStore(
-    (state) => state.clearCurrentOrder
-  );
-  const totalAmount = useCurrentOrderStore((state) => state.totalAmount);
-  const setTotalAmount = useCurrentOrderStore((state) => state.setTotalAmount);
-  const uniqueCurrentOrder = useCurrentOrderStore(
-    (state) => state.uniqueCurrentOrder
-  );
-  const setUniqueCurrentOrder = useCurrentOrderStore(
+  const currentOrder = useOrderStore((state) => state.currentOrder);
+  const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
+  const totalAmount = useOrderStore((state) => state.totalAmount);
+  const setTotalAmount = useOrderStore((state) => state.setTotalAmount);
+  const uniqueCurrentOrder = useOrderStore((state) => state.uniqueCurrentOrder);
+  const setUniqueCurrentOrder = useOrderStore(
     (state) => state.setUniqueCurrentOrder
   );
-  const incrementItem = useCurrentOrderStore((state) => state.incrementItem);
-  const decrementItem = useCurrentOrderStore((state) => state.decrementItem);
-  const removeItem = useCurrentOrderStore((state) => state.removeItem);
+  const incrementItem = useOrderStore((state) => state.incrementItem);
+  const decrementItem = useOrderStore((state) => state.decrementItem);
+  const removeItem = useOrderStore((state) => state.removeItem);
+
+  const orderSummaryCollectionRef = collection(db, "orderSummary");
+
+  const [buttonText, setButtonText] = useState("Create Order");
 
   useEffect(() => {
     calculateTotal();
@@ -67,6 +70,18 @@ function NewOrderDetails() {
     setTotalAmount(result);
   }
 
+  async function handleCreateOrder(currentOrder: Product[]) {
+    setButtonText("Submitting...");
+    const data = {
+      products: currentOrder,
+      created: Timestamp.fromDate(new Date()),
+    };
+    await addDoc(orderSummaryCollectionRef, data);
+    clearCurrentOrder();
+    setButtonText("Submitted");
+    setTimeout(() => setButtonText("Create Order"), 3000);
+  }
+
   return (
     <div className={styles.orderSection}>
       <h4>Order</h4>
@@ -83,7 +98,9 @@ function NewOrderDetails() {
       <hr />
       <div className={styles.buttonGroup}>
         <button onClick={clearCurrentOrder}>Clear</button>
-        <button>Create Order</button>
+        <button onClick={() => handleCreateOrder(currentOrder)}>
+          {buttonText}
+        </button>
       </div>
     </div>
   );

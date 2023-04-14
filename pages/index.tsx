@@ -3,8 +3,8 @@ import Head from "next/head";
 import React, { useState } from "react";
 
 import styles from "../styles/Home.module.css";
-import List from "@/components/List";
-import Order from "@/components/Order";
+import ListSection from "@/components/ListSection";
+import OrderSection from "@/components/OrderSection";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
@@ -19,7 +19,7 @@ export type handleInterfaceChange = {
 
 /* ================== MAIN COMPONENT ================== */
 export default function Home() {
-  const [appInterface, setAppInterface] = useState("New Order");
+  const [appInterface, setAppInterface] = useState("New OrderSection");
 
   function handleInterfaceChange(interfaceValue: string) {
     setAppInterface(interfaceValue);
@@ -36,11 +36,11 @@ export default function Home() {
 
       <main className={styles.mainContainer}>
         <div className={styles.container}>
-          <List
+          <ListSection
             appInterface={appInterface}
             handleInterfaceChange={handleInterfaceChange}
           />
-          <Order appInterface={appInterface} />
+          <OrderSection appInterface={appInterface} />
         </div>
       </main>
     </>

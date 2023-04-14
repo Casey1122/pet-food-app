@@ -5,11 +5,10 @@ interface Props {
   appInterface: string;
 }
 
-export default function Order(props: Props) {
-  console.log("props", props);
+export default function OrderSection(props: Props) {
   return (
     <>
-      {props.appInterface === "New Order" ? (
+      {props.appInterface === "New OrderSection" ? (
         <NewOrderDetails />
       ) : (
         <ViewOrderDetails />

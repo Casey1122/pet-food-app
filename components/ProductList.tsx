@@ -2,7 +2,7 @@ import { productData } from "@/pages/api/productData";
 import { AiOutlinePlus } from "react-icons/ai";
 
 import styles from "../styles/Home.module.css";
-import { useCurrentOrderStore } from "@/stores/OrderStore";
+import { useOrderStore } from "@/stores/OrderStore";
 
 interface Props {
   category: string;
@@ -10,9 +10,7 @@ interface Props {
 
 /* ================== MAIN COMPONENT ================== */
 export default function ProductList(props: Props) {
-  const addToCurrentOrder = useCurrentOrderStore(
-    (state) => state.addToCurrentOrder
-  );
+  const addToCurrentOrder = useOrderStore((state) => state.addToCurrentOrder);
 
   const filteredList = productData.filter(
     (item) => item.category === props.category

@@ -1,13 +1,4 @@
-export interface Product {
-  id: number;
-  category: string;
-  type?: string;
-  part?: string;
-  name_en: string;
-  name_tc: string;
-  price: number;
-  gram: number;
-}
+import { Product } from "@/stores/OrderStore";
 
 export const productData: Product[] = [
   {

@@ -1,6 +1,3 @@
-import List from "@/components/List";
-import Order from "@/components/Order";
-import { useState } from "react";
 import CateFilterButton from "@/components/CateFilterButton";
 import ProductList from "@/components/ProductList";
 
