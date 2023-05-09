@@ -6,6 +6,7 @@ import { db } from "@/firebaseConfig";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
 import { loadEnvConfig } from "@next/env";
+import { number } from "prop-types";
 
 export default function ViewOrderDetails() {
   const currentOrder = useOrderStore((state) => state.currentOrder);
@@ -21,8 +22,9 @@ export default function ViewOrderDetails() {
   const removeItem = useOrderStore((state) => state.removeItem);
   const calculateTotal = useOrderStore((state) => state.calculateTotal);
 
-  const [displayUniqueOrder, setDisplayUniqueOrder] =
-    useState<UniqueCurrentOrder>([]);
+  const [displayUniqueOrder, setDisplayUniqueOrder] = useState<
+    UniqueCurrentOrder[]
+  >([]);
 
   useEffect(() => {
     setTotalAmount(calculateTotal(currentOrder));
@@ -33,8 +35,8 @@ export default function ViewOrderDetails() {
   console.log("displayUniqueOrder", displayUniqueOrder);
 
   function convertDisplayUniqueOrder(orders: UniqueCurrentOrder[]) {
-    let uniques: UniqueCurrentOrder = [];
-    let itemsFound = {};
+    let uniques: UniqueCurrentOrder[] = [];
+    let itemsFound: { [key: number]: boolean } = {};
     for (const order of orders) {
       if (itemsFound[order.product.id]) {
         continue;
