@@ -8,7 +8,7 @@ interface Props {
 export default function OrderSection(props: Props) {
   return (
     <>
-      {props.appInterface === "New OrderSection" ? (
+      {props.appInterface === "New Order" ? (
         <NewOrderDetails />
       ) : (
         <ViewOrderDetails />

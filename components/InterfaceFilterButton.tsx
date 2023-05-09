@@ -10,12 +10,12 @@ function InterfaceFilterButton(props: handleInterfaceChange) {
         type="radio"
         id="New Order"
         name="interface-filter"
-        value="New OrderSection"
+        value="New Order"
         defaultChecked
       />
       <label
         htmlFor="New Order"
-        onClick={() => props.handleInterfaceChange("New OrderSection")}
+        onClick={() => props.handleInterfaceChange("New Order")}
       >
         <AiOutlinePlusCircle className={styles.filterIcon} />
         New Order

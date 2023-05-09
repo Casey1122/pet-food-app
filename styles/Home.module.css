@@ -323,3 +323,14 @@
 .buttonGroup button:active {
     filter: brightness(80%);
 }
+
+
+/* ======================= ========================= */
+
+.orderSummary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+    cursor: pointer;
+}

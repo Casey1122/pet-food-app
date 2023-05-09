@@ -19,7 +19,7 @@ export type handleInterfaceChange = {
 
 /* ================== MAIN COMPONENT ================== */
 export default function Home() {
-  const [appInterface, setAppInterface] = useState("New OrderSection");
+  const [appInterface, setAppInterface] = useState("New Order");
 
   function handleInterfaceChange(interfaceValue: string) {
     setAppInterface(interfaceValue);

@@ -1,11 +1,10 @@
 import { create } from "zustand";
 import firestore from "firebase/firestore";
-import { immer } from "zustand/middleware/immer";
-import { set } from "@firebase/database";
 
 export interface OrderStore {
   currentOrder: Product[];
   addToCurrentOrder: (item: Product) => void;
+  setCurrentOrder: (item: Order) => void;
   clearCurrentOrder: () => void;
   totalAmount: number;
   setTotalAmount: (amount: number) => void;
@@ -17,6 +16,7 @@ export interface OrderStore {
   incrementItem: (id: number, currentOrder: Product[]) => void;
   decrementItem: (id: number, currentOrder: Product[]) => void;
   removeItem: (id: number, currentOrder: Product[]) => void;
+  calculateTotal: (currentOrder: Product[]) => number;
   // orderSummary: OrderSummary[];
 }
 
@@ -39,6 +39,7 @@ export interface UniqueCurrentOrder {
 export interface Order {
   products: Product[];
   created: firestore.Timestamp;
+  id: string;
 }
 
 interface Count {
@@ -49,6 +50,8 @@ export const useOrderStore = create<OrderStore>((set) => ({
   currentOrder: [],
   addToCurrentOrder: (item: Product) =>
     set((state) => ({ ...state, currentOrder: [...state.currentOrder, item] })),
+  setCurrentOrder: (item: Order) =>
+    set((state) => ({ ...state, currentOrder: item.products })),
   clearCurrentOrder: () => set({ currentOrder: [] }),
   totalAmount: 0,
   setTotalAmount: (amount) => set({ totalAmount: amount }),
@@ -69,21 +72,8 @@ export const useOrderStore = create<OrderStore>((set) => ({
   removeItem: (id: number, currentOrder) => {
     set({ currentOrder: removeItem(id, currentOrder) });
   },
+  calculateTotal: calculateTotal,
 }));
-
-/*
-export const useOrderStore = create<CurrentOrderStore>(
-  immer<State & Actions>((set) => ({
-    currentOrder: [],
-    addToCurrentOrder: (item: Product) =>
-      set((state) => {
-        state.currentOder.push(item);
-      }),
-    clearCurrent: () => set(state => state.)
-  }))
-);
-
- */
 
 function createUniqueCurrentOrder(
   currentOrder: Product[]
@@ -117,4 +107,10 @@ function decrementCurrentOrder(id: number, currentOrder: Product[]) {
 
 function removeItem(id: number, currentOrder: Product[]) {
   return currentOrder.filter((item) => item.id !== id);
+}
+
+function calculateTotal(currentOrder: Product[]) {
+  return currentOrder
+    .map((item) => item.price)
+    .reduce((accumulator, current) => accumulator + current, 0);
 }

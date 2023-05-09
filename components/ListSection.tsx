@@ -3,6 +3,7 @@ import InterfaceFilterButton from "@/components/InterfaceFilterButton";
 import { useState } from "react";
 import NewOrderInterface from "@/components/NewOrderInterface";
 import OrderSummary from "@/components/OrderSummary";
+import { useOrderStore } from "@/stores/OrderStore";
 
 interface Props {
   handleInterfaceChange: (value: string) => void;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 function ListSection(props: Props) {
+  const currentOrder = useOrderStore((state) => state.currentOrder);
   const [category, setCategory] = useState("");
 
   function handleCateChange(category: string) {
@@ -21,7 +23,7 @@ function ListSection(props: Props) {
       <InterfaceFilterButton
         handleInterfaceChange={props.handleInterfaceChange}
       />
-      {props.appInterface === "New OrderSection" ? (
+      {props.appInterface === "New Order" ? (
         <NewOrderInterface
           handleCateChange={handleCateChange}
           category={category}

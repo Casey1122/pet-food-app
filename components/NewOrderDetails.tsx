@@ -21,13 +21,15 @@ function NewOrderDetails() {
   const incrementItem = useOrderStore((state) => state.incrementItem);
   const decrementItem = useOrderStore((state) => state.decrementItem);
   const removeItem = useOrderStore((state) => state.removeItem);
+  const calculateTotal = useOrderStore((state) => state.calculateTotal);
 
   const orderSummaryCollectionRef = collection(db, "orderSummary");
 
   const [buttonText, setButtonText] = useState("Create Order");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    calculateTotal();
+    setTotalAmount(calculateTotal(currentOrder));
     setUniqueCurrentOrder(currentOrder, uniqueCurrentOrder);
   }, [currentOrder]);
 
@@ -63,14 +65,11 @@ function NewOrderDetails() {
     );
   });
 
-  function calculateTotal() {
-    const result = currentOrder
-      .map((item) => item.price)
-      .reduce((accumulator, current) => accumulator + current, 0);
-    setTotalAmount(result);
-  }
-
   async function handleCreateOrder(currentOrder: Product[]) {
+    if (currentOrder.length === 0) {
+      return;
+    }
+    setIsLoading(true);
     setButtonText("Submitting...");
     const data = {
       products: currentOrder,
@@ -80,6 +79,7 @@ function NewOrderDetails() {
     clearCurrentOrder();
     setButtonText("Submitted");
     setTimeout(() => setButtonText("Create Order"), 3000);
+    setIsLoading(false);
   }
 
   return (
@@ -98,7 +98,10 @@ function NewOrderDetails() {
       <hr />
       <div className={styles.buttonGroup}>
         <button onClick={clearCurrentOrder}>Clear</button>
-        <button onClick={() => handleCreateOrder(currentOrder)}>
+        <button
+          onClick={() => handleCreateOrder(currentOrder)}
+          disabled={isLoading}
+        >
           {buttonText}
         </button>
       </div>
