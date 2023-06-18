@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import styles from "../styles/Home.module.css";
 import ListSection from "@/components/ListSection";
 import OrderSection from "@/components/OrderSection";
+import { useOrderStore } from "@/stores/OrderStore";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {
@@ -20,8 +21,10 @@ export type handleInterfaceChange = {
 /* ================== MAIN COMPONENT ================== */
 export default function Home() {
   const [appInterface, setAppInterface] = useState("New Order");
+  const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
 
   function handleInterfaceChange(interfaceValue: string) {
+    clearCurrentOrder();
     setAppInterface(interfaceValue);
   }
 

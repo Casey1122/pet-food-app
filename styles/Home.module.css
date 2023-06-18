@@ -325,7 +325,7 @@
 }
 
 
-/* ======================= ========================= */
+/* ======================= ORDER SECTION ========================= */
 
 .orderSummary {
     display: flex;
@@ -333,4 +333,8 @@
     align-items: center;
     margin-bottom: 1em;
     cursor: pointer;
+}
+
+.editButton {
+    margin-right: 0 !important;
 }

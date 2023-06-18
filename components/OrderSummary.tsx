@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { Order, useOrderStore } from "@/stores/OrderStore";
 import styles from "@/styles/Home.module.css";
-import { AiOutlinePlus } from "react-icons/ai";
 
 export default function OrderSummary() {
   const [orderSummary, setOrderSummary] = useState<Order[]>([]);
@@ -20,19 +19,35 @@ export default function OrderSummary() {
     getOrderSummary();
   }, []);
 
+  // async function getOrderSummary() {
+  //   try {
+  //     const data = await getDocs(orderSummaryCollectionRef);
+  //     setOrderSummary(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  console.log("orderSummary", orderSummary);
+
   async function getOrderSummary() {
-    const data = await getDocs(orderSummaryCollectionRef);
-    // @ts-ignore
-    setOrderSummary(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    try {
+      const data = await getDocs(orderSummaryCollectionRef);
+      const orders = data.docs.map((doc) => ({
+        id: doc.id,
+        products: doc.data().products,
+        created: doc.data().created,
+      }));
+      setOrderSummary(orders);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function handleAddToCurrentOrder(order: Order) {
     clearCurrentOrder();
     setCurrentOrder(order);
   }
-
-  // console.log("item.products", item.products);
-  // console.log("currentOrder", currentOrder);
 
   const orderSummaryList = orderSummary.map((item, index) => {
     return (

@@ -1,14 +1,13 @@
 import styles from "@/styles/Home.module.css";
-import { Order, UniqueCurrentOrder, useOrderStore } from "@/stores/OrderStore";
+import { UniqueCurrentOrder, useOrderStore } from "@/stores/OrderStore";
 import { useEffect, useState } from "react";
-import { collection } from "@firebase/firestore";
-import { db } from "@/firebaseConfig";
+
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
-import { loadEnvConfig } from "@next/env";
-import { number } from "prop-types";
 
 export default function ViewOrderDetails() {
+  const [editOrder, setEditOrder] = useState(false);
+
   const currentOrder = useOrderStore((state) => state.currentOrder);
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
   const totalAmount = useOrderStore((state) => state.totalAmount);
@@ -32,8 +31,10 @@ export default function ViewOrderDetails() {
     convertDisplayUniqueOrder(uniqueCurrentOrder);
   }, [currentOrder, displayUniqueOrder]);
 
-  console.log("displayUniqueOrder", displayUniqueOrder);
+  // console.log("currentOrder", currentOrder);
 
+  // convertDisplayUniqueOrder() reduces parameter array
+  // to show only unique order obj for order display.
   function convertDisplayUniqueOrder(orders: UniqueCurrentOrder[]) {
     let uniques: UniqueCurrentOrder[] = [];
     let itemsFound: { [key: number]: boolean } = {};
@@ -45,6 +46,10 @@ export default function ViewOrderDetails() {
       itemsFound[order.product.id] = true;
     }
     setDisplayUniqueOrder(uniques);
+  }
+
+  function toggleEditOrder() {
+    setEditOrder((prev) => !prev);
   }
 
   const currentOrderElement = displayUniqueOrder.map((item, index) => {
@@ -86,13 +91,28 @@ export default function ViewOrderDetails() {
         {currentOrder.length ? currentOrderElement : <p>No item yet</p>}
       </div>
       <div className={styles.itemCost}>
-        <p>TOTAL ITEM: {currentOrder.length > 1 ? "pcs" : "pc"}</p>
+        <p>
+          TOTAL ITEM: {currentOrder.length}
+          {currentOrder.length > 1 ? "pcs" : "pc"}
+        </p>
         <p>TOTAL: $ {totalAmount.toLocaleString("en-US")}</p>
       </div>
       <hr />
       <div className={styles.buttonGroup}>
-        <button>Clear</button>
-        <button>Create Order</button>
+        {editOrder ? (
+          <div>
+            {currentOrder.length > 0 ? (
+              <button onClick={clearCurrentOrder}>Clear</button>
+            ) : (
+              <button onClick={toggleEditOrder}>Cancel Edit</button>
+            )}
+            <button>Create Order</button>
+          </div>
+        ) : (
+          <button className={styles.editButton} onClick={toggleEditOrder}>
+            Edit Order
+          </button>
+        )}
       </div>
     </div>
   );
