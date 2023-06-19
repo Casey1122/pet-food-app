@@ -62,22 +62,28 @@ export default function ViewOrderDetails() {
           </p>
         </div>
         <div className={styles.quantityBox}>
-          <AiOutlineMinus
-            className={styles.quantityButton}
-            onClick={() => decrementItem(item.product.id, currentOrder)}
-          />
+          {editOrder && (
+            <AiOutlineMinus
+              className={styles.quantityButton}
+              onClick={() => decrementItem(item.product.id, currentOrder)}
+            />
+          )}
           <p>
             {item.quantity}
             {item.quantity > 1 ? " pcs" : " pc"}
           </p>
-          <AiOutlinePlus
-            className={styles.quantityButton}
-            onClick={() => incrementItem(item.product.id, currentOrder)}
-          />
-          <TfiTrash
-            className={styles.removeButton}
-            onClick={() => removeItem(item.product.id, currentOrder)}
-          />
+          {editOrder && (
+            <AiOutlinePlus
+              className={styles.quantityButton}
+              onClick={() => incrementItem(item.product.id, currentOrder)}
+            />
+          )}
+          {editOrder && (
+            <TfiTrash
+              className={styles.removeButton}
+              onClick={() => removeItem(item.product.id, currentOrder)}
+            />
+          )}
         </div>
         <p>${item.product.price}</p>
       </div>

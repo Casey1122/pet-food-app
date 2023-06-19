@@ -28,8 +28,6 @@ export default function OrderSummary() {
   //   }
   // }
 
-  console.log("orderSummary", orderSummary);
-
   async function getOrderSummary() {
     try {
       const data = await getDocs(orderSummaryCollectionRef);
@@ -43,6 +41,8 @@ export default function OrderSummary() {
       console.error(error);
     }
   }
+
+  console.log("currentOrder", currentOrder);
 
   function handleAddToCurrentOrder(order: Order) {
     clearCurrentOrder();
@@ -58,6 +58,7 @@ export default function OrderSummary() {
         }`}
         onClick={() => {
           handleAddToCurrentOrder(item);
+          console.log("item ID:", item.id);
         }}
       >
         <div className={styles.itemName}>
@@ -72,7 +73,7 @@ export default function OrderSummary() {
   return (
     <>
       <h4>Order Summary</h4>
-      {orderSummaryList}
+      <div className={styles.orderSummaryContainer}>{orderSummaryList}</div>
     </>
   );
 }

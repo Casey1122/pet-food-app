@@ -125,7 +125,7 @@
     width: 35%;
     padding: 2em;
     border-radius: 8px 0 0 8px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .item {
@@ -338,3 +338,9 @@
 .editButton {
     margin-right: 0 !important;
 }
+
+.orderSummaryContainer {
+    overflow: scroll;
+    height: 700px;
+}
+

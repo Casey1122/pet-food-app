@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import firestore from "firebase/firestore";
+import { string } from "prop-types";
 
 export interface OrderStore {
   currentOrder: Product[];
@@ -18,6 +19,8 @@ export interface OrderStore {
   removeItem: (id: number, currentOrder: Product[]) => void;
   calculateTotal: (currentOrder: Product[]) => number;
   // orderSummary: OrderSummary[];
+  modalInterface: string;
+  handleModalInterfaceChange: (interfaceValue: string) => void;
 }
 
 export interface Product {
@@ -73,6 +76,9 @@ export const useOrderStore = create<OrderStore>((set) => ({
     set({ currentOrder: removeItem(id, currentOrder) });
   },
   calculateTotal: calculateTotal,
+  modalInterface: "",
+  handleModalInterfaceChange: (interfaceValue: string) =>
+    set({ modalInterface: interfaceValue }),
 }));
 
 function createUniqueCurrentOrder(
