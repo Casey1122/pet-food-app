@@ -6,6 +6,7 @@ import styles from "../styles/Home.module.css";
 import ListSection from "@/components/ListSection";
 import OrderSection from "@/components/OrderSection";
 import { useOrderStore } from "@/stores/OrderStore";
+import ConfirmEditModal from "@/components/ConfirmEditModal";
 
 /* ----------------- TYPE DECLARATION ----------------- */
 export type HandleCateChange = {

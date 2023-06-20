@@ -6,8 +6,14 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
 
 export default function ViewOrderDetails() {
-  const [editOrder, setEditOrder] = useState(false);
-
+  const isEditOrder = useOrderStore((state) => state.isEditOrder);
+  const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
+  const showConfirmEditModal = useOrderStore(
+    (state) => state.showConfirmEditModal
+  );
+  const toggleShowConfirmEditModal = useOrderStore(
+    (state) => state.toggleShowConfirmEditModal
+  );
   const currentOrder = useOrderStore((state) => state.currentOrder);
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
   const totalAmount = useOrderStore((state) => state.totalAmount);
@@ -48,10 +54,6 @@ export default function ViewOrderDetails() {
     setDisplayUniqueOrder(uniques);
   }
 
-  function toggleEditOrder() {
-    setEditOrder((prev) => !prev);
-  }
-
   const currentOrderElement = displayUniqueOrder.map((item, index) => {
     return (
       <div key={index} className={styles.orderItem}>
@@ -62,7 +64,7 @@ export default function ViewOrderDetails() {
           </p>
         </div>
         <div className={styles.quantityBox}>
-          {editOrder && (
+          {isEditOrder && (
             <AiOutlineMinus
               className={styles.quantityButton}
               onClick={() => decrementItem(item.product.id, currentOrder)}
@@ -72,13 +74,13 @@ export default function ViewOrderDetails() {
             {item.quantity}
             {item.quantity > 1 ? " pcs" : " pc"}
           </p>
-          {editOrder && (
+          {isEditOrder && (
             <AiOutlinePlus
               className={styles.quantityButton}
               onClick={() => incrementItem(item.product.id, currentOrder)}
             />
           )}
-          {editOrder && (
+          {isEditOrder && (
             <TfiTrash
               className={styles.removeButton}
               onClick={() => removeItem(item.product.id, currentOrder)}
@@ -105,17 +107,22 @@ export default function ViewOrderDetails() {
       </div>
       <hr />
       <div className={styles.buttonGroup}>
-        {editOrder ? (
+        {isEditOrder ? (
           <div>
-            {currentOrder.length > 0 ? (
-              <button onClick={clearCurrentOrder}>Clear</button>
-            ) : (
-              <button onClick={toggleEditOrder}>Cancel Edit</button>
-            )}
-            <button>Create Order</button>
+            <button onClick={toggleIsEditOrder}>Cancel Edit</button>
+            <button
+              onClick={() => {
+                console.log("Confirm Edit Order Clicked");
+              }}
+            >
+              Confirm Edit Order
+            </button>
           </div>
         ) : (
-          <button className={styles.editButton} onClick={toggleEditOrder}>
+          <button
+            className={styles.editButton}
+            onClick={toggleShowConfirmEditModal}
+          >
             Edit Order
           </button>
         )}

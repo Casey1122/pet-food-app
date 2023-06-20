@@ -7,6 +7,8 @@ import styles from "@/styles/Home.module.css";
 export default function OrderSummary() {
   const [orderSummary, setOrderSummary] = useState<Order[]>([]);
   const orderSummaryCollectionRef = collection(db, "orderSummary");
+  const isEditOrder = useOrderStore((state) => state.isEditOrder);
+  const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
 
   const currentOrder = useOrderStore((state) => state.currentOrder);
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
@@ -57,6 +59,9 @@ export default function OrderSummary() {
           index % 2 === 0 ? styles.itemDivOdd : styles.itemDiv
         }`}
         onClick={() => {
+          if (isEditOrder) {
+            toggleIsEditOrder();
+          }
           handleAddToCurrentOrder(item);
           console.log("item ID:", item.id);
         }}

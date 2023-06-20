@@ -18,9 +18,10 @@ export interface OrderStore {
   decrementItem: (id: number, currentOrder: Product[]) => void;
   removeItem: (id: number, currentOrder: Product[]) => void;
   calculateTotal: (currentOrder: Product[]) => number;
-  // orderSummary: OrderSummary[];
-  modalInterface: string;
-  handleModalInterfaceChange: (interfaceValue: string) => void;
+  showConfirmEditModal: boolean;
+  toggleShowConfirmEditModal: () => void;
+  isEditOrder: boolean;
+  toggleIsEditOrder: () => void;
 }
 
 export interface Product {
@@ -76,9 +77,12 @@ export const useOrderStore = create<OrderStore>((set) => ({
     set({ currentOrder: removeItem(id, currentOrder) });
   },
   calculateTotal: calculateTotal,
-  modalInterface: "",
-  handleModalInterfaceChange: (interfaceValue: string) =>
-    set({ modalInterface: interfaceValue }),
+  showConfirmEditModal: false,
+  toggleShowConfirmEditModal: () =>
+    set((state) => ({ showConfirmEditModal: !state.showConfirmEditModal })),
+  isEditOrder: false,
+  toggleIsEditOrder: () =>
+    set((state) => ({ isEditOrder: !state.isEditOrder })),
 }));
 
 function createUniqueCurrentOrder(
