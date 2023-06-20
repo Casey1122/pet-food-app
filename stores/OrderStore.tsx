@@ -22,6 +22,8 @@ export interface OrderStore {
   toggleShowConfirmEditModal: () => void;
   isEditOrder: boolean;
   toggleIsEditOrder: () => void;
+  showConfirmCreateNewOrderModal: boolean;
+  toggleShowConfirmCreateNewOrderModal: () => void;
 }
 
 export interface Product {
@@ -83,6 +85,11 @@ export const useOrderStore = create<OrderStore>((set) => ({
   isEditOrder: false,
   toggleIsEditOrder: () =>
     set((state) => ({ isEditOrder: !state.isEditOrder })),
+  showConfirmCreateNewOrderModal: false,
+  toggleShowConfirmCreateNewOrderModal: () =>
+    set((state) => ({
+      showConfirmCreateNewOrderModal: !state.showConfirmCreateNewOrderModal,
+    })),
 }));
 
 function createUniqueCurrentOrder(

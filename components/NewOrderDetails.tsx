@@ -8,7 +8,15 @@ import { TfiTrash } from "react-icons/tfi";
 import { db } from "@/firebaseConfig";
 import { collection, addDoc, Timestamp } from "@firebase/firestore";
 
-function NewOrderDetails() {
+interface Props {
+  buttonText: string;
+  setButtonText: (text: string) => void;
+  isLoading: boolean;
+  setIsLoading: (value: boolean) => void;
+  handleCreateOrder: (currentOrder: Product[]) => void;
+}
+
+function NewOrderDetails(props: Props) {
   /* ==================== VALUE FROM STORE ==================== */
   const currentOrder = useOrderStore((state) => state.currentOrder);
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
@@ -65,22 +73,28 @@ function NewOrderDetails() {
     );
   });
 
-  async function handleCreateOrder(currentOrder: Product[]) {
-    if (currentOrder.length === 0) {
-      return;
-    }
-    setIsLoading(true);
-    setButtonText("Submitting...");
-    const data = {
-      products: currentOrder,
-      created: Timestamp.fromDate(new Date()),
-    };
-    await addDoc(orderSummaryCollectionRef, data);
-    clearCurrentOrder();
-    setButtonText("Submitted");
-    setTimeout(() => setButtonText("Create Order"), 3000);
-    setIsLoading(false);
-  }
+  /*
+            async function handleCreateOrder(currentOrder: Product[]) {
+              try {
+                if (currentOrder.length === 0) {
+                  return;
+                }
+                setIsLoading(true);
+                setButtonText("Submitting...");
+                const data = {
+                  products: currentOrder,
+                  created: Timestamp.fromDate(new Date()),
+                };
+                await addDoc(orderSummaryCollectionRef, data);
+                clearCurrentOrder();
+                setButtonText("Submitted");
+                setTimeout(() => setButtonText("Create Order"), 3000);
+                setIsLoading(false);
+              } catch (error) {
+                console.log("Error when uploading to Firebase", error);
+              }
+            }
+             */
 
   return (
     <div className={styles.orderSection}>
@@ -98,11 +112,8 @@ function NewOrderDetails() {
       <hr />
       <div className={styles.buttonGroup}>
         <button onClick={clearCurrentOrder}>Clear</button>
-        <button
-          onClick={() => handleCreateOrder(currentOrder)}
-          disabled={isLoading}
-        >
-          {buttonText}
+        <button onClick={() => props.handleCreateOrder(currentOrder)}>
+          Create Order
         </button>
       </div>
     </div>

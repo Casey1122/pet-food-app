@@ -364,13 +364,15 @@
 }
 
 .modal p:first-of-type {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     font-size: 1.3rem;
     font-weight: bold;
 }
 
 .modal p:last-of-type {
-    margin-bottom: 3em;
+    margin-bottom: 2em;
+    text-align: center;
+    line-height: 1.5rem;
 }
 
 .modalOverlay {
