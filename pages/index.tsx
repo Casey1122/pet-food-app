@@ -23,10 +23,15 @@ export type handleInterfaceChange = {
 export default function Home() {
   const [appInterface, setAppInterface] = useState("New Order");
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
+  const isEditOrder = useOrderStore((state) => state.isEditOrder);
+  const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
 
   function handleInterfaceChange(interfaceValue: string) {
     clearCurrentOrder();
     setAppInterface(interfaceValue);
+    if (isEditOrder) {
+      toggleIsEditOrder();
+    }
   }
 
   return (

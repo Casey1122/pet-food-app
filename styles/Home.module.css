@@ -295,16 +295,21 @@
 
 .buttonGroup button {
     border: none;
-    padding: 0.5em 3em;
+    padding: 0.5em 2em;
     border-radius: 40px;
     font-weight: bold;
     font-size: 1.1rem;
 }
 
 .buttonGroup button:first-of-type {
-    margin-right: 3em;
+    margin-right: 1em;
     background-color: #eaeaea;
     color: orangered;
+}
+
+.buttonGroup button:nth-of-type(2) {
+    /*background-color: red;*/
+    margin-right: 1em;
 }
 
 .buttonGroup button:first-of-type:hover {
@@ -342,6 +347,25 @@
 .orderSummaryContainer {
     overflow: scroll;
     height: 700px;
+}
+
+.orderSummaryTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*border: 1px solid red;*/
+    margin-bottom: 0.4em;
+}
+
+.orderSummaryTitle h4 {
+    font-size: 1.2rem;
+    /*margin-bottom: 0.4em;*/
+}
+
+.orderSummaryIcon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
 /* ======================= CONFIRM EDIT MODAL ========================= */
@@ -386,4 +410,41 @@
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(1px);
     z-index: 1;
+}
+
+.switchIcon {
+    font-size: 1.2rem;
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+.showExtraProductModal {
+    background-color: #EBF2F8;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    border-radius: 0.5em;
+    width: 470px;
+    height: 600px;
+    left: 80px;
+    top: 250px;
+    box-shadow: 8px 8px 20px rgba(31, 33, 54, 0.25);
+}
+
+.extraProductTitle {
+    color: #41098a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+
+.closeButton {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.closeButton:hover {
+    filter: brightness(50%);
 }

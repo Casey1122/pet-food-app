@@ -46,11 +46,15 @@ export default function OrderSection(props: Props) {
     }
   }
 
+  console.log("showConfirmCreateNewOrderModal", showConfirmCreateNewOrderModal);
+
   return (
     <>
       {props.appInterface === "New Order" ? (
         <>
-          {showConfirmCreateNewOrderModal && <ConfirmCreateNewOrderModal />}
+          {showConfirmCreateNewOrderModal && (
+            <ConfirmCreateNewOrderModal handleCreateOrder={handleCreateOrder} />
+          )}
           <NewOrderDetails
             buttonText={buttonText}
             setButtonText={setButtonText}

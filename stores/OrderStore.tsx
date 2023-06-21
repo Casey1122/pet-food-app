@@ -1,6 +1,15 @@
 import { create } from "zustand";
 import firestore from "firebase/firestore";
-import { string } from "prop-types";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  OrderByDirection,
+  query,
+} from "@firebase/firestore";
+import { db } from "@/firebaseConfig";
+
+// import { Timestamp } from "@firebase/firestore";
 
 export interface OrderStore {
   currentOrder: Product[];
@@ -24,6 +33,14 @@ export interface OrderStore {
   toggleIsEditOrder: () => void;
   showConfirmCreateNewOrderModal: boolean;
   toggleShowConfirmCreateNewOrderModal: () => void;
+  orderSummary: Order[];
+  setOrderSummary: (order: Order[]) => void;
+  targetedOrderID: string;
+  setTargetedOrderID: (id: string) => void;
+  reloadDB: boolean;
+  setReloadDB: () => void;
+  showExtraProductModal: boolean;
+  toggleShowExtraProductModal: () => void;
 }
 
 export interface Product {
@@ -52,12 +69,19 @@ interface Count {
   [key: number]: number;
 }
 
+const orderSummaryCollectionRef = collection(db, "orderSummary");
+
 export const useOrderStore = create<OrderStore>((set) => ({
   currentOrder: [],
   addToCurrentOrder: (item: Product) =>
     set((state) => ({ ...state, currentOrder: [...state.currentOrder, item] })),
   setCurrentOrder: (item: Order) =>
-    set((state) => ({ ...state, currentOrder: item.products })),
+    set((state) => ({
+      ...state,
+      currentOrder: item.products,
+      id: item.id,
+      created: item.created,
+    })),
   clearCurrentOrder: () => set({ currentOrder: [] }),
   totalAmount: 0,
   setTotalAmount: (amount) => set({ totalAmount: amount }),
@@ -90,6 +114,20 @@ export const useOrderStore = create<OrderStore>((set) => ({
     set((state) => ({
       showConfirmCreateNewOrderModal: !state.showConfirmCreateNewOrderModal,
     })),
+  orderSummary: [],
+  setOrderSummary: (order) => set((state) => ({ orderSummary: order })),
+  targetedOrderID: "",
+  setTargetedOrderID: (id) => {
+    set((state) => ({ targetedOrderID: id }));
+  },
+  reloadDB: false,
+  setReloadDB: () => {
+    set((state) => ({ reloadDB: !state.reloadDB }));
+  },
+  showExtraProductModal: false,
+  toggleShowExtraProductModal: () => {
+    set((state) => ({ showExtraProductModal: !state.showExtraProductModal }));
+  },
 }));
 
 function createUniqueCurrentOrder(

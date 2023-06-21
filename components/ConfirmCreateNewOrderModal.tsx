@@ -1,23 +1,31 @@
 import styles from "@/styles/Home.module.css";
-import { useOrderStore } from "@/stores/OrderStore";
+import { Product, useOrderStore } from "@/stores/OrderStore";
 
-export default function ConfirmCreateNewOrderModal() {
-  const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
-  const toggleShowConfirmEditModal = useOrderStore(
-    (state) => state.toggleShowConfirmEditModal
+interface Props {
+  handleCreateOrder: (currentOrder: Product[]) => Promise<void>;
+}
+
+export default function ConfirmCreateNewOrderModal(props: Props) {
+  const showConfirmCreateNewOrderModal = useOrderStore(
+    (state) => state.showConfirmCreateNewOrderModal
   );
+  const toggleShowConfirmCreateNewOrderModal = useOrderStore(
+    (state) => state.toggleShowConfirmCreateNewOrderModal
+  );
+  const currentOrder = useOrderStore((state) => state.currentOrder);
 
   // return <p>Confirm create new order modal</p>;
   return (
     <>
       <div className={styles.modal}>
         <p>Create this order?</p>
+        <p>After confirmation, this order will be stored in the database.</p>
         <div className={styles.buttonGroup}>
-          <button onClick={toggleShowConfirmEditModal}>Cancel</button>
+          <button onClick={toggleShowConfirmCreateNewOrderModal}>Cancel</button>
           <button
             onClick={() => {
-              toggleIsEditOrder();
-              toggleShowConfirmEditModal();
+              toggleShowConfirmCreateNewOrderModal();
+              props.handleCreateOrder(currentOrder);
             }}
           >
             Confirm

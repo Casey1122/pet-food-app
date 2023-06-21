@@ -1,21 +1,28 @@
 import styles from "@/styles/Home.module.css";
-import { UniqueCurrentOrder, useOrderStore } from "@/stores/OrderStore";
+import { UniqueCurrentOrder, useOrderStore, Order } from "@/stores/OrderStore";
 import { useEffect, useState } from "react";
 
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
+import { db } from "@/firebaseConfig";
+import {
+  addDoc,
+  collection,
+  Timestamp,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "@firebase/firestore";
+import ExtraProductModal from "@/components/ExtraProductModal";
 
 export default function ViewOrderDetails() {
   const isEditOrder = useOrderStore((state) => state.isEditOrder);
   const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
-  const showConfirmEditModal = useOrderStore(
-    (state) => state.showConfirmEditModal
-  );
   const toggleShowConfirmEditModal = useOrderStore(
     (state) => state.toggleShowConfirmEditModal
   );
   const currentOrder = useOrderStore((state) => state.currentOrder);
-  const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
+  const setCurrentOrder = useOrderStore((state) => state.setOrderSummary);
   const totalAmount = useOrderStore((state) => state.totalAmount);
   const setTotalAmount = useOrderStore((state) => state.setTotalAmount);
   const uniqueCurrentOrder = useOrderStore((state) => state.uniqueCurrentOrder);
@@ -26,6 +33,18 @@ export default function ViewOrderDetails() {
   const decrementItem = useOrderStore((state) => state.decrementItem);
   const removeItem = useOrderStore((state) => state.removeItem);
   const calculateTotal = useOrderStore((state) => state.calculateTotal);
+  const targetedOrderID = useOrderStore((state) => state.targetedOrderID);
+  const [updateButtonText, setUpdateButtonText] =
+    useState("Confirm Edit Order");
+  const [isLoading, setIsLoading] = useState(false);
+  const reloadDB = useOrderStore((state) => state.reloadDB);
+  const setReloadDB = useOrderStore((state) => state.setReloadDB);
+  const showExtraProductModal = useOrderStore(
+    (state) => state.showExtraProductModal
+  );
+  const toggleShowExtraProductModal = useOrderStore(
+    (state) => state.toggleShowExtraProductModal
+  );
 
   const [displayUniqueOrder, setDisplayUniqueOrder] = useState<
     UniqueCurrentOrder[]
@@ -52,6 +71,36 @@ export default function ViewOrderDetails() {
       itemsFound[order.product.id] = true;
     }
     setDisplayUniqueOrder(uniques);
+  }
+
+  function handleCancelEdit() {
+    const tempArr = [...currentOrder];
+    toggleIsEditOrder();
+    // setCurrentOrder(tempArr)
+  }
+
+  async function handleUpdateOrderToDB() {
+    // console.log("currentOrder", currentOrder);
+    setUpdateButtonText("Updating, please wait");
+    setIsLoading(true);
+    try {
+      if (currentOrder.length > 0) {
+        await updateDoc(doc(db, "orderSummary", targetedOrderID), {
+          products: currentOrder,
+        });
+      } else {
+        await deleteDoc(doc(db, "orderSummary", targetedOrderID));
+      }
+      setUpdateButtonText("Update Finished");
+      setTimeout(() => {
+        toggleIsEditOrder();
+        setIsLoading(false);
+        setReloadDB();
+      }, 1000);
+      setUpdateButtonText("Confirm Edit Order");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const currentOrderElement = displayUniqueOrder.map((item, index) => {
@@ -106,16 +155,29 @@ export default function ViewOrderDetails() {
         <p>TOTAL: $ {totalAmount.toLocaleString("en-US")}</p>
       </div>
       <hr />
+      {showExtraProductModal && <ExtraProductModal />}
       <div className={styles.buttonGroup}>
         {isEditOrder ? (
           <div>
-            <button onClick={toggleIsEditOrder}>Cancel Edit</button>
             <button
               onClick={() => {
-                console.log("Confirm Edit Order Clicked");
+                toggleIsEditOrder();
               }}
+              disabled={isLoading}
             >
-              Confirm Edit Order
+              Cancel Edit
+            </button>
+            <button onClick={toggleShowExtraProductModal}>Extra Product</button>
+            <button
+              onClick={() => {
+                handleUpdateOrderToDB();
+                if (showExtraProductModal) {
+                  toggleShowExtraProductModal();
+                }
+              }}
+              disabled={isLoading}
+            >
+              {updateButtonText} {/* "Confirm Edit Order" */}
             </button>
           </div>
         ) : (

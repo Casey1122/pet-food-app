@@ -30,6 +30,9 @@ function NewOrderDetails(props: Props) {
   const decrementItem = useOrderStore((state) => state.decrementItem);
   const removeItem = useOrderStore((state) => state.removeItem);
   const calculateTotal = useOrderStore((state) => state.calculateTotal);
+  const toggleShowConfirmCreateNewOrderModal = useOrderStore(
+    (state) => state.toggleShowConfirmCreateNewOrderModal
+  );
 
   const orderSummaryCollectionRef = collection(db, "orderSummary");
 
@@ -74,27 +77,27 @@ function NewOrderDetails(props: Props) {
   });
 
   /*
-            async function handleCreateOrder(currentOrder: Product[]) {
-              try {
-                if (currentOrder.length === 0) {
-                  return;
+                async function handleCreateOrder(currentOrder: Product[]) {
+                  try {
+                    if (currentOrder.length === 0) {
+                      return;
+                    }
+                    setIsLoading(true);
+                    setButtonText("Submitting...");
+                    const data = {
+                      products: currentOrder,
+                      created: Timestamp.fromDate(new Date()),
+                    };
+                    await addDoc(orderSummaryCollectionRef, data);
+                    clearCurrentOrder();
+                    setButtonText("Submitted");
+                    setTimeout(() => setButtonText("Create Order"), 3000);
+                    setIsLoading(false);
+                  } catch (error) {
+                    console.log("Error when uploading to Firebase", error);
+                  }
                 }
-                setIsLoading(true);
-                setButtonText("Submitting...");
-                const data = {
-                  products: currentOrder,
-                  created: Timestamp.fromDate(new Date()),
-                };
-                await addDoc(orderSummaryCollectionRef, data);
-                clearCurrentOrder();
-                setButtonText("Submitted");
-                setTimeout(() => setButtonText("Create Order"), 3000);
-                setIsLoading(false);
-              } catch (error) {
-                console.log("Error when uploading to Firebase", error);
-              }
-            }
-             */
+                 */
 
   return (
     <div className={styles.orderSection}>
@@ -112,7 +115,7 @@ function NewOrderDetails(props: Props) {
       <hr />
       <div className={styles.buttonGroup}>
         <button onClick={clearCurrentOrder}>Clear</button>
-        <button onClick={() => props.handleCreateOrder(currentOrder)}>
+        <button onClick={toggleShowConfirmCreateNewOrderModal}>
           Create Order
         </button>
       </div>

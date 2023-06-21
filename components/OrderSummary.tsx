@@ -1,11 +1,18 @@
 import { db } from "@/firebaseConfig";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "@firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  OrderByDirection,
+} from "@firebase/firestore";
 import { Order, useOrderStore } from "@/stores/OrderStore";
 import styles from "@/styles/Home.module.css";
+import { CgArrowsExchangeV } from "react-icons/cg";
 
 export default function OrderSummary() {
-  const [orderSummary, setOrderSummary] = useState<Order[]>([]);
+  // const [orderSummary, setOrderSummary] = useState<Order[]>([]);
   const orderSummaryCollectionRef = collection(db, "orderSummary");
   const isEditOrder = useOrderStore((state) => state.isEditOrder);
   const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
@@ -16,35 +23,51 @@ export default function OrderSummary() {
   const setUniqueCurrentOrder = useOrderStore(
     (state) => state.setUniqueCurrentOrder
   );
+  const orderSummary = useOrderStore((state) => state.orderSummary);
+  const setOrderSummary = useOrderStore((state) => state.setOrderSummary);
+  const targetedOrderID = useOrderStore((state) => state.targetedOrderID);
+  const setTargetedOrderID = useOrderStore((state) => state.setTargetedOrderID);
+  const reloadDB = useOrderStore((state) => {
+    state.reloadDB;
+  });
+
+  const [sortOrder, setSortOrder] = useState<OrderByDirection>("desc");
 
   useEffect(() => {
-    getOrderSummary();
-  }, []);
+    // getOrderSummary();
+    getOrderSummaryByCreatedTime(sortOrder);
+  }, [sortOrder, reloadDB, getOrderSummaryByCreatedTime]);
 
-  // async function getOrderSummary() {
-  //   try {
-  //     const data = await getDocs(orderSummaryCollectionRef);
-  //     setOrderSummary(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  function switchSortOrder() {
+    if (sortOrder === "desc") {
+      setSortOrder("asc");
+    } else {
+      setSortOrder("desc");
+    }
+  }
 
-  async function getOrderSummary() {
+  // console.log("hi");
+
+  async function getOrderSummaryByCreatedTime(sortOrder: OrderByDirection) {
     try {
-      const data = await getDocs(orderSummaryCollectionRef);
+      const myQuery = query(
+        orderSummaryCollectionRef,
+        orderBy("created", sortOrder)
+      );
+      const data = await getDocs(myQuery);
       const orders = data.docs.map((doc) => ({
         id: doc.id,
         products: doc.data().products,
         created: doc.data().created,
       }));
       setOrderSummary(orders);
+      // console.log("sortedOrder", orders);
     } catch (error) {
       console.error(error);
     }
   }
 
-  console.log("currentOrder", currentOrder);
+  // console.log("currentOrder", currentOrder);
 
   function handleAddToCurrentOrder(order: Order) {
     clearCurrentOrder();
@@ -63,7 +86,7 @@ export default function OrderSummary() {
             toggleIsEditOrder();
           }
           handleAddToCurrentOrder(item);
-          console.log("item ID:", item.id);
+          setTargetedOrderID(item.id);
         }}
       >
         <div className={styles.itemName}>
@@ -77,7 +100,14 @@ export default function OrderSummary() {
 
   return (
     <>
-      <h4>Order Summary</h4>
+      <div className={styles.orderSummaryTitle}>
+        <h4>Order Summary</h4>
+        <div className={styles.orderSummaryIcon} onClick={switchSortOrder}>
+          <CgArrowsExchangeV className={styles.switchIcon} />
+          reverse order
+        </div>
+      </div>
+
       <div className={styles.orderSummaryContainer}>{orderSummaryList}</div>
     </>
   );
