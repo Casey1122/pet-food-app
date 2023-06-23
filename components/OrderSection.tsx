@@ -46,7 +46,7 @@ export default function OrderSection(props: Props) {
     }
   }
 
-  console.log("showConfirmCreateNewOrderModal", showConfirmCreateNewOrderModal);
+  // console.log("showConfirmCreateNewOrderModal", showConfirmCreateNewOrderModal);
 
   return (
     <>

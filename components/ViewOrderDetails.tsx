@@ -1,5 +1,10 @@
 import styles from "@/styles/Home.module.css";
-import { UniqueCurrentOrder, useOrderStore, Order } from "@/stores/OrderStore";
+import {
+  UniqueCurrentOrder,
+  useOrderStore,
+  Order,
+  Product,
+} from "@/stores/OrderStore";
 import { useEffect, useState } from "react";
 
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
@@ -9,11 +14,14 @@ import {
   addDoc,
   collection,
   Timestamp,
+  getDoc,
   updateDoc,
   doc,
   deleteDoc,
 } from "@firebase/firestore";
 import ExtraProductModal from "@/components/ExtraProductModal";
+import { current } from "immer";
+import NoChangeModal from "@/components/NoChangeModal";
 
 export default function ViewOrderDetails() {
   const isEditOrder = useOrderStore((state) => state.isEditOrder);
@@ -44,6 +52,10 @@ export default function ViewOrderDetails() {
   );
   const toggleShowExtraProductModal = useOrderStore(
     (state) => state.toggleShowExtraProductModal
+  );
+  const showNoChangeModal = useOrderStore((state) => state.showNoChangeModal);
+  const toggleShowNoChangeModal = useOrderStore(
+    (state) => state.toggleShowNoChangeModal
   );
 
   const [displayUniqueOrder, setDisplayUniqueOrder] = useState<
@@ -83,23 +95,100 @@ export default function ViewOrderDetails() {
     // console.log("currentOrder", currentOrder);
     setUpdateButtonText("Updating, please wait");
     setIsLoading(true);
-    try {
-      if (currentOrder.length > 0) {
+
+    // the following logic checks whether the currentOrder is edited
+    // if no edit made, i.e. currentOrder is identical to the Products[] from DB
+    // no update to DB will be made.
+
+    const orderRef = doc(db, "orderSummary", targetedOrderID);
+    const orderRefSnap = await getDoc(orderRef);
+    const orderRefSnapProductArray: Product[] = orderRefSnap.data().products;
+    if (orderRefSnap.exists()) {
+      console.log("orderRefSnapProductArray", orderRefSnapProductArray);
+    } else {
+      console.log("No such document.");
+    }
+
+    // CASE 1 - currentOrder.length > or < products array from DB
+    if (
+      currentOrder.length !== orderRefSnapProductArray.length &&
+      currentOrder.length > 0
+    ) {
+      console.log("Case 1");
+      try {
         await updateDoc(doc(db, "orderSummary", targetedOrderID), {
           products: currentOrder,
         });
-      } else {
-        await deleteDoc(doc(db, "orderSummary", targetedOrderID));
+        setUpdateButtonText("Update Finished");
+        setTimeout(() => {
+          toggleIsEditOrder();
+          setIsLoading(false);
+          setReloadDB();
+        }, 1000);
+        setUpdateButtonText("Confirm Edit Order");
+      } catch (error) {
+        console.error(error);
       }
-      setUpdateButtonText("Update Finished");
-      setTimeout(() => {
-        toggleIsEditOrder();
+      return;
+    }
+
+    // CASE 2 - currentOrder.length === products array.length which leads to product item checking
+    // to see if everything is identical
+    if (currentOrder.length === orderRefSnapProductArray.length) {
+      console.log("Case 2");
+      const checkArray = [];
+
+      for (let i = 0; i < orderRefSnapProductArray.length; i++) {
+        if (orderRefSnapProductArray[i].id === currentOrder[i].id) {
+          checkArray.push("same");
+        } else {
+          checkArray.push("new");
+        }
+        console.log("checkArray", checkArray);
+      }
+
+      let findNewItem = checkArray.includes("new");
+      console.log("findNewItem", findNewItem);
+
+      if (!findNewItem) {
+        toggleShowNoChangeModal();
         setIsLoading(false);
-        setReloadDB();
-      }, 1000);
-      setUpdateButtonText("Confirm Edit Order");
-    } catch (error) {
-      console.error(error);
+        return;
+      }
+
+      if (findNewItem) {
+        try {
+          setIsLoading(true);
+          await updateDoc(doc(db, "orderSummary", targetedOrderID), {
+            products: currentOrder,
+          });
+          setUpdateButtonText("Update Finished");
+          setTimeout(() => {
+            toggleIsEditOrder();
+          }, 1000);
+          setUpdateButtonText("Confirm Edit Order");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+
+    // CASE 3 - currentOrder.length === 0 which will delete the record from DB
+    if (currentOrder.length === 0) {
+      console.log("Case 3");
+      try {
+        await deleteDoc(doc(db, "orderSummary", targetedOrderID));
+        setUpdateButtonText("Update Finished");
+        setTimeout(() => {
+          toggleIsEditOrder();
+          setIsLoading(false);
+          setReloadDB();
+        }, 1000);
+        setUpdateButtonText("Confirm Edit Order");
+      } catch (error) {
+        console.error(error);
+      }
+      return;
     }
   }
 
@@ -148,13 +237,15 @@ export default function ViewOrderDetails() {
         {currentOrder.length ? currentOrderElement : <p>No item yet</p>}
       </div>
       <div className={styles.itemCost}>
-        <p>
+        <p>ID: {targetedOrderID}</p>
+        <p style={{ marginRight: "38px" }}>
           TOTAL ITEM: {currentOrder.length}
           {currentOrder.length > 1 ? "pcs" : "pc"}
         </p>
         <p>TOTAL: $ {totalAmount.toLocaleString("en-US")}</p>
       </div>
       <hr />
+      {showNoChangeModal && <NoChangeModal />}
       {showExtraProductModal && <ExtraProductModal />}
       <div className={styles.buttonGroup}>
         {isEditOrder ? (
@@ -183,7 +274,10 @@ export default function ViewOrderDetails() {
         ) : (
           <button
             className={styles.editButton}
-            onClick={toggleShowConfirmEditModal}
+            onClick={() => {
+              toggleShowConfirmEditModal();
+              setUpdateButtonText("Confirm update");
+            }}
           >
             Edit Order
           </button>

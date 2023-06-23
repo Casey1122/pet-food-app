@@ -41,6 +41,8 @@ export interface OrderStore {
   setReloadDB: () => void;
   showExtraProductModal: boolean;
   toggleShowExtraProductModal: () => void;
+  showNoChangeModal: boolean;
+  toggleShowNoChangeModal: () => void;
 }
 
 export interface Product {
@@ -127,6 +129,10 @@ export const useOrderStore = create<OrderStore>((set) => ({
   showExtraProductModal: false,
   toggleShowExtraProductModal: () => {
     set((state) => ({ showExtraProductModal: !state.showExtraProductModal }));
+  },
+  showNoChangeModal: false,
+  toggleShowNoChangeModal: () => {
+    set((state) => ({ showNoChangeModal: !state.showNoChangeModal }));
   },
 }));
 

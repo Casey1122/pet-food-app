@@ -11,7 +11,7 @@ export default function ConfirmEditModal() {
   return (
     <>
       <div className={styles.modal}>
-        {currentOrder.length > 1 ? (
+        {currentOrder.length > 0 ? (
           <>
             <p>Start editing this order?</p>
             <p>
