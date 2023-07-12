@@ -2,25 +2,15 @@ import styles from "@/styles/Home.module.css";
 import {
   UniqueCurrentOrder,
   useOrderStore,
-  Order,
   Product,
 } from "@/stores/OrderStore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TfiTrash } from "react-icons/tfi";
 import { db } from "@/firebaseConfig";
-import {
-  addDoc,
-  collection,
-  Timestamp,
-  getDoc,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "@firebase/firestore";
+import { getDoc, updateDoc, doc, deleteDoc } from "@firebase/firestore";
 import ExtraProductModal from "@/components/ExtraProductModal";
-import { current } from "immer";
 import NoChangeModal from "@/components/NoChangeModal";
 
 export default function ViewOrderDetails() {
@@ -57,20 +47,12 @@ export default function ViewOrderDetails() {
   const toggleShowNoChangeModal = useOrderStore(
     (state) => state.toggleShowNoChangeModal
   );
+  const orderSummary = useOrderStore((state) => state.orderSummary);
 
   const [displayUniqueOrder, setDisplayUniqueOrder] = useState<
     UniqueCurrentOrder[]
   >([]);
 
-  useEffect(() => {
-    setTotalAmount(calculateTotal(currentOrder));
-    setUniqueCurrentOrder(currentOrder, uniqueCurrentOrder);
-    convertDisplayUniqueOrder(uniqueCurrentOrder);
-  }, [currentOrder, displayUniqueOrder]);
-
-  // console.log("currentOrder", currentOrder);
-
-  // convertDisplayUniqueOrder() reduces parameter array
   // to show only unique order obj for order display.
   function convertDisplayUniqueOrder(orders: UniqueCurrentOrder[]) {
     let uniques: UniqueCurrentOrder[] = [];
@@ -85,11 +67,21 @@ export default function ViewOrderDetails() {
     setDisplayUniqueOrder(uniques);
   }
 
-  function handleCancelEdit() {
-    const tempArr = [...currentOrder];
-    toggleIsEditOrder();
-    // setCurrentOrder(tempArr)
-  }
+  useEffect(() => {
+    setTotalAmount(calculateTotal(currentOrder));
+    setUniqueCurrentOrder(currentOrder, uniqueCurrentOrder);
+    convertDisplayUniqueOrder(uniqueCurrentOrder);
+  }, [currentOrder, displayUniqueOrder]);
+
+  // function restoreCurrentOrder() {
+  //   const orderCopyArr = [];
+  //   const foundOrder = orderSummary.find((item) => item.id === targetedOrderID);
+  //   if (foundOrder) {
+  //     orderCopyArr.push(foundOrder);
+  //     console.log("orderCopy", orderCopyArr);
+  //     setCurrentOrder(orderCopyArr);
+  //   }
+  // }
 
   async function handleUpdateOrderToDB() {
     // console.log("currentOrder", currentOrder);
@@ -102,7 +94,7 @@ export default function ViewOrderDetails() {
 
     const orderRef = doc(db, "orderSummary", targetedOrderID);
     const orderRefSnap = await getDoc(orderRef);
-    const orderRefSnapProductArray: Product[] = orderRefSnap.data().products;
+    const orderRefSnapProductArray: Product[] = orderRefSnap.data()?.products;
     if (orderRefSnap.exists()) {
       console.log("orderRefSnapProductArray", orderRefSnapProductArray);
     } else {
@@ -192,6 +184,8 @@ export default function ViewOrderDetails() {
     }
   }
 
+  console.log("currentOrder", currentOrder);
+
   const currentOrderElement = displayUniqueOrder.map((item, index) => {
     return (
       <div key={index} className={styles.orderItem}>
@@ -253,6 +247,7 @@ export default function ViewOrderDetails() {
             <button
               onClick={() => {
                 toggleIsEditOrder();
+                // restoreCurrentOrder();
               }}
               disabled={isLoading}
             >
@@ -275,8 +270,9 @@ export default function ViewOrderDetails() {
           <button
             className={styles.editButton}
             onClick={() => {
-              toggleShowConfirmEditModal();
+              setIsLoading(false);
               setUpdateButtonText("Confirm update");
+              toggleShowConfirmEditModal();
             }}
           >
             Edit Order

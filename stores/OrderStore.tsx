@@ -43,6 +43,10 @@ export interface OrderStore {
   toggleShowExtraProductModal: () => void;
   showNoChangeModal: boolean;
   toggleShowNoChangeModal: () => void;
+  currentOrderCopy: Product[];
+  setCurrentOrderCopy: (item: Order) => void;
+  displayUniqueOrder: UniqueCurrentOrder[];
+  setDisplayUniqueOrder: (uniques: UniqueCurrentOrder[]) => void;
 }
 
 export interface Product {
@@ -70,8 +74,6 @@ export interface Order {
 interface Count {
   [key: number]: number;
 }
-
-const orderSummaryCollectionRef = collection(db, "orderSummary");
 
 export const useOrderStore = create<OrderStore>((set) => ({
   currentOrder: [],
@@ -133,6 +135,18 @@ export const useOrderStore = create<OrderStore>((set) => ({
   showNoChangeModal: false,
   toggleShowNoChangeModal: () => {
     set((state) => ({ showNoChangeModal: !state.showNoChangeModal }));
+  },
+  currentOrderCopy: [],
+  setCurrentOrderCopy: (item: Order) =>
+    set((state) => ({
+      ...state,
+      currentOrder: item.products,
+      id: item.id,
+      created: item.created,
+    })),
+  displayUniqueOrder: [],
+  setDisplayUniqueOrder: (uniques) => {
+    set((state) => ({ displayUniqueOrder: uniques }));
   },
 }));
 

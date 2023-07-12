@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   collection,
   getDocs,
@@ -12,20 +12,16 @@ import styles from "@/styles/Home.module.css";
 import { CgArrowsExchangeV } from "react-icons/cg";
 
 export default function OrderSummary() {
-  // const [orderSummary, setOrderSummary] = useState<Order[]>([]);
   const orderSummaryCollectionRef = collection(db, "orderSummary");
   const isEditOrder = useOrderStore((state) => state.isEditOrder);
   const toggleIsEditOrder = useOrderStore((state) => state.toggleIsEditOrder);
-
-  const currentOrder = useOrderStore((state) => state.currentOrder);
+  const setCurrentOrderCopy = useOrderStore(
+    (state) => state.setCurrentOrderCopy
+  );
   const clearCurrentOrder = useOrderStore((state) => state.clearCurrentOrder);
   const setCurrentOrder = useOrderStore((state) => state.setCurrentOrder);
-  const setUniqueCurrentOrder = useOrderStore(
-    (state) => state.setUniqueCurrentOrder
-  );
   const orderSummary = useOrderStore((state) => state.orderSummary);
   const setOrderSummary = useOrderStore((state) => state.setOrderSummary);
-  const targetedOrderID = useOrderStore((state) => state.targetedOrderID);
   const setTargetedOrderID = useOrderStore((state) => state.setTargetedOrderID);
   const reloadDB = useOrderStore((state) => {
     state.reloadDB;
@@ -33,10 +29,30 @@ export default function OrderSummary() {
 
   const [sortOrder, setSortOrder] = useState<OrderByDirection>("desc");
 
+  const getOrderSummaryByCreatedTime = useCallback(
+    async (sortOrder: OrderByDirection) => {
+      try {
+        const myQuery = query(
+          orderSummaryCollectionRef,
+          orderBy("created", sortOrder)
+        );
+        const data = await getDocs(myQuery);
+        const orders = data.docs.map((doc) => ({
+          id: doc.id,
+          products: doc.data().products,
+          created: doc.data().created,
+        }));
+        setOrderSummary(orders);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
-    // getOrderSummary();
     getOrderSummaryByCreatedTime(sortOrder);
-  }, [sortOrder, reloadDB, getOrderSummaryByCreatedTime]);
+  }, []);
 
   function switchSortOrder() {
     if (sortOrder === "desc") {
@@ -46,32 +62,34 @@ export default function OrderSummary() {
     }
   }
 
-  // console.log("hi");
+  console.log("trial");
 
-  async function getOrderSummaryByCreatedTime(sortOrder: OrderByDirection) {
-    try {
-      const myQuery = query(
-        orderSummaryCollectionRef,
-        orderBy("created", sortOrder)
-      );
-      const data = await getDocs(myQuery);
-      const orders = data.docs.map((doc) => ({
-        id: doc.id,
-        products: doc.data().products,
-        created: doc.data().created,
-      }));
-      setOrderSummary(orders);
-      // console.log("sortedOrder", orders);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  /*
+                        async function getOrderSummaryByCreatedTime(sortOrder: OrderByDirection) {
+                          try {
+                            const myQuery = query(
+                              orderSummaryCollectionRef,
+                              orderBy("created", sortOrder)
+                            );
+                            const data = await getDocs(myQuery);
+                            const orders = data.docs.map((doc) => ({
+                              id: doc.id,
+                              products: doc.data().products,
+                              created: doc.data().created,
+                            }));
+                            setOrderSummary(orders);
+                          } catch (error) {
+                            console.error(error);
+                          }
+                        }
+                         */
 
   // console.log("currentOrder", currentOrder);
 
   function handleAddToCurrentOrder(order: Order) {
     clearCurrentOrder();
     setCurrentOrder(order);
+    setCurrentOrderCopy(order);
   }
 
   const orderSummaryList = orderSummary.map((item, index) => {
